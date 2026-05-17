@@ -1,0 +1,213 @@
+body{
+  margin:0;
+  padding:20px;
+  background:#ececec;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+.toolbar{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+button{
+  padding:10px 20px;
+  background:#0d47a1;
+  color:white;
+  border:none;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.page{
+  width:210mm;
+  min-height:297mm;
+  margin:auto;
+  background:white;
+  padding:10mm;
+  box-sizing:border-box;
+}
+
+.top-row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+
+.left-title{
+  width:52%;
+  margin-top:120px;
+}
+
+.left-title h1{
+  background:#0d47a1;
+  color:white;
+  font-size:20px;
+  padding:8px;
+  margin:0;
+}
+
+.left-title h2{
+  background:#0d47a1;
+  color:white;
+  font-size:12px;
+  padding:5px 8px;
+  margin:0;
+  font-weight:normal;
+}
+
+.ticket-box{
+  width:42%;
+}
+
+.field-inline{
+  display:flex;
+  align-items:center;
+  margin-bottom:10px;
+  gap:10px;
+}
+
+.field-inline input{
+  flex:1;
+  border:none;
+  border-bottom:1px dotted #777;
+}
+
+.columns{
+  display:flex;
+  gap:20px;
+}
+
+.left-column{
+  width:50%;
+}
+
+.right-column{
+  width:50%;
+}
+
+.section-title{
+  background:#0d47a1;
+  color:white;
+  padding:4px 6px;
+  font-size:12px;
+  margin-top:10px;
+  margin-bottom:10px;
+  font-weight:bold;
+}
+
+.line-field{
+  margin-bottom:12px;
+}
+
+.line-field label{
+  display:block;
+  font-size:11px;
+  margin-bottom:3px;
+}
+
+.line-field input{
+  width:100%;
+  border:none;
+  border-bottom:1px dotted #888;
+  padding:4px 0;
+}
+
+.line-field textarea{
+  width:100%;
+  height:80px;
+  border:none;
+  border-bottom:1px dotted #888;
+}
+
+.schema-box{
+  height:220px;
+  border-bottom:1px dotted #888;
+  margin-bottom:20px;
+  font-size:12px;
+}
+
+.checkbox-group{
+  margin:20px 0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  font-size:12px;
+}
+
+.firma-box{
+  height:70px;
+  border:1px dashed #999;
+  margin-bottom:15px;
+  padding:5px;
+  font-size:12px;
+}
+
+.check-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:11px;
+}
+
+.check-table th{
+  background:#0d47a1;
+  color:white;
+  padding:5px;
+}
+
+.check-table td{
+  border-bottom:1px solid #ccc;
+  padding:5px;
+}
+
+.notes-title{
+  background:#0d47a1;
+  color:white;
+  padding:5px;
+  margin-top:20px;
+  font-size:12px;
+}
+
+.notes-checks{
+  display:flex;
+  justify-content:space-between;
+  margin:10px 0;
+  font-size:11px;
+}
+
+.big-notes{
+  width:100%;
+  height:180px;
+  border:none;
+  border-bottom:1px dotted #999;
+}
+
+.privacy-box{
+  margin-top:20px;
+  font-size:10px;
+  text-align:justify;
+}
+
+.privacy-consent{
+  margin-top:10px;
+  display:flex;
+  gap:20px;
+}
+
+@media print {
+
+  body{
+    background:white;
+    padding:0;
+  }
+
+  .toolbar{
+    display:none;
+  }
+
+  .page{
+    margin:0;
+    width:100%;
+  }
+
+}
