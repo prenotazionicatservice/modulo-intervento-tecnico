@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modulo Rapporto Tecnico</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="downloadPDF()">Scarica PDF</button>
+</div>
+
+<div id="modulo" class="page">
+
+  <div class="top-row">
+    <div class="left-title">
+      <h1>MODULO RAPPORTO TECNICO</h1>
+      <h2>PER IMPIANTO TERMICO CON POTENZA NOM. AL FOCOLARE &lt; 35 KW</h2>
+    </div>
+
+    <div class="ticket-box">
+      <div class="field-inline">
+        <label>N. Ticket</label>
+        <input type="text">
+      </div>
+
+      <div class="field-inline">
+        <label>Data Intervento</label>
+        <input type="date">
+      </div>
+
+      <div class="field-inline">
+        <label>Ora ingresso</label>
+        <input type="time">
+      </div>
+
+      <div class="field-inline">
+        <label>Ora uscita</label>
+        <input type="time">
+      </div>
+    </div>
+  </div>
+
+  <div class="columns">
+
+    <!-- COLONNA SINISTRA -->
+    <div class="left-column">
+
+      <div class="section-title">
+        RESPONSABILE DELL'IMPIANTO TERMICO (CLIENTE FINALE)
+      </div>
+
+      <div class="line-field">
+        <label>Cognome/Nome</label>
+        <input type="text">
+      </div>
+
+      <div class="line-field">
+        <label>Indirizzo</label>
+        <input type="text">
+      </div>
+
+      <div class="line-field">
+        <label>Telefono</label>
+        <input type="text">
+      </div>
+
+      <div class="line-field">
+        <label>E-Mail</label>
+        <input type="text">
+      </div>
+
+      <div class="line-field">
+        <label>Cod. Fisc.</label>
+        <input type="text">
+      </div>
+
+      <div class="section-title">
+        IDENTIFICAZIONE DEL GENERATORE INSTALLATO
+      </div>
+
+      <div class="line-field">
+        <label>Marca</label>
+        <input type="text">
+      </div>
+
+      <div class="line-field">
+        <label>Modello</label>
+        <input type="text">
+      </div>
+
+      <div class="line-field">
+        <label>Matricola</label>
+        <input type="text">
+      </div>
+
+      <div class="line-field">
+        <label>Data acquisto</label>
+        <input type="text">
+      </div>
+
+      <div class="line-field">
+        <label>Rivenditore</label>
+        <input type="text">
+      </div>
+
+      <div class="schema-box">
+        SCHEMATIZZARE INSTALLAZIONE
+      </div>
+
+      <div class="section-title">
+        ESITO DEL CONTROLLO
+      </div>
+
+      <div class="line-field">
+        <label>MOTIVO CHIAMATA</label>
+        <input type="text">
+      </div>
+
+      <div class="line-field">
+        <label>SOLUZIONE</label>
+        <input type="text">
+      </div>
+
+      <div class="checkbox-group">
+        <div>
+          CONTROLLO STUFA
+          <label>SI <input type="checkbox"></label>
+          <label>NO <input type="checkbox"></label>
+        </div>
+
+        <div>
+          CANNA FUMARIA
+          <label>SI <input type="checkbox"></label>
+          <label>NO <input type="checkbox"></label>
+        </div>
+      </div>
+
+      <div class="line-field">
+        <label>SOSTITUZIONE COMPONENTI</label>
+        <textarea></textarea>
+      </div>
+
+      <div class="line-field">
+        <label>TOTALE</label>
+        <input type="text">
+      </div>
+
+      <div class="line-field">
+        <label>ALTRO</label>
+        <input type="text">
+      </div>
+
+      <div class="section-title">
+        ACCETTAZIONE DEL RAPPORTO TECNICO
+      </div>
+
+      <div class="firma-box">
+        FIRMA DEL TECNICO
+      </div>
+
+      <div class="firma-box">
+        FIRMA DEL RESPONSABILE IMPIANTO (PER PRESA VISIONE)
+      </div>
+
+    </div>
+
+    <!-- COLONNA DESTRA -->
+    <div class="right-column">
+
+      <div class="section-title">
+        VERIFICA INSTALLAZIONE
+      </div>
+
+      <table class="check-table">
+        <tr>
+          <th></th>
+          <th>SI</th>
+          <th>NO</th>
+        </tr>
+
+        <tr>
+          <td>Dichiarazione di conformità impianto elettrico</td>
+          <td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+
+        <tr>
+          <td>Dichiarazione di conformità impianto fumario</td>
+          <td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+
+        <tr>
+          <td>Libretto impianto</td>
+          <td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+
+        <tr>
+          <td>Idoneità locale installazione</td>
+          <td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+
+        <tr>
+          <td>Presenza aperture ventilazione</td>
+          <td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+
+      </table>
+
+      <div class="notes-title">
+        NOTE
+      </div>
+
+      <div class="notes-checks">
+        <label><input type="checkbox"> OSSERVAZIONI</label>
+        <label><input type="checkbox"> RACCOMANDAZIONI</label>
+        <label><input type="checkbox"> PRESCRIZIONI</label>
+      </div>
+
+      <textarea class="big-notes"></textarea>
+
+      <div class="privacy-box">
+        <h3>INFORMATIVA PRIVACY</h3>
+
+        <p>
+          Informativa ai sensi della disciplina sulla tutela dei dati personali.
+          I dati verranno trattati nel rispetto della normativa vigente.
+        </p>
+
+        <div class="privacy-consent">
+          <label>
+            <input type="checkbox">
+            esprime il consenso
+          </label>
+
+          <label>
+            <input type="checkbox">
+            non esprime il consenso
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function downloadPDF() {
+
+  const element = document.getElementById('modulo');
+
+  const opt = {
+    margin: 0,
+    filename: 'rapporto-tecnico.pdf',
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: { scale: 2 },
+    jsPDF: {
+      unit: 'mm',
+      format: 'a4',
+      orientation: 'portrait'
+    }
+  };
+
+  html2pdf().set(opt).from(element).save();
+}
+</script>
+
+</body>
+</html>
