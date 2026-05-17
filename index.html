@@ -11,6 +11,7 @@
 
 <div class="toolbar">
   <button onclick="downloadPDF()">Scarica PDF</button>
+  <button onclick="clearAllCanvases()" class="btn-clear">Cancella Disegni e Firme</button>
 </div>
 
 <div id="modulo" class="page">
@@ -103,8 +104,9 @@
         <input type="text">
       </div>
 
-      <div class="schema-box">
-        SCHEMATIZZARE INSTALLAZIONE
+      <div class="schema-container">
+        <div class="canvas-label">SCHEMATIZZARE INSTALLAZIONE (Disegna qui sotto)</div>
+        <canvas id="canvas-schema" width="350" height="90"></canvas>
       </div>
 
       <div class="section-title">
@@ -153,12 +155,14 @@
         ACCETTAZIONE DEL RAPPORTO TECNICO
       </div>
 
-      <div class="firma-box">
-        FIRMA DEL TECNICO
+      <div class="firma-container">
+        <div class="canvas-label">FIRMA DEL TECNICO</div>
+        <canvas id="canvas-firma-tecnico" width="350" height="50"></canvas>
       </div>
 
-      <div class="firma-box">
-        FIRMA DEL RESPONSABILE IMPIANTO (PER PRESA VISIONE)
+      <div class="firma-container">
+        <div class="canvas-label">FIRMA DEL RESPONSABILE IMPIANTO (PER PRESA VISIONE)</div>
+        <canvas id="canvas-firma-cliente" width="350" height="50"></canvas>
       </div>
 
     </div>
@@ -315,11 +319,74 @@
 </div>
 
 <script>
+function initCanvas(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+
+  // Forza il corretto dimensionamento visivo nel canvas
+  canvas.width = canvas.parentElement.clientWidth - 2;
+
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#000000';
+
+  // Mouse eventi
+  canvas.addEventListener('mousedown', (e) => { drawing = true; draw(e, canvas, ctx); });
+  canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
+  canvas.addEventListener('mousemove', (e) => { draw(e, canvas, ctx); });
+
+  // Touch eventi (Smartphone e Tablet)
+  canvas.addEventListener('touchstart', (e) => { drawing = true; drawTouch(e, canvas, ctx); e.preventDefault(); }, { passive: false });
+  canvas.addEventListener('touchend', () => { drawing = false; ctx.beginPath(); }, { passive: false });
+  canvas.addEventListener('touchmove', (e) => { drawTouch(e, canvas, ctx); e.preventDefault(); }, { passive: false });
+}
+
+function draw(e, canvas, ctx) {
+  if (!ctx.canvas.parentElement.offsetParent || !e.buttons && e.type === 'mousemove') return;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+}
+
+function drawTouch(e, canvas, ctx) {
+  if (e.touches.length === 0) return;
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+}
+
+function clearAllCanvases() {
+  ['canvas-schema', 'canvas-firma-tecnico', 'canvas-firma-cliente'].forEach(id => {
+    const canvas = document.getElementById(id);
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  });
+}
+
+// Inizializza i canvas al caricamento della pagina
+window.onload = function() {
+  initCanvas('canvas-schema');
+  initCanvas('canvas-firma-tecnico');
+  initCanvas('canvas-firma-cliente');
+};
+
 function downloadPDF() {
   const element = document.getElementById('modulo');
   const opt = {
     margin: 0,
-    filename: 'rapporto-tecnico-stufa.pdf',
+    filename: 'rapporto-tecnico-firmato.pdf',
     image: { type: 'jpeg', quality: 1 },
     html2canvas: { scale: 2, useCORS: true },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
