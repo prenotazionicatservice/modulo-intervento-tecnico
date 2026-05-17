@@ -1,213 +1,319 @@
-body{
-  margin:0;
-  padding:20px;
-  background:#ececec;
-  font-family:Arial, Helvetica, sans-serif;
+/* ==========================================
+   RESET E IMPOSTAZIONI DI BASE
+   ========================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.toolbar{
-  text-align:center;
-  margin-bottom:20px;
+body {
+  background: #ececec;
+  padding: 20px;
+  color: #333;
 }
 
-button{
-  padding:10px 20px;
-  background:#0d47a1;
-  color:white;
-  border:none;
-  cursor:pointer;
-  font-size:16px;
+/* ==========================================
+   TOOLBAR (NASCOSTA IN STAMPA)
+   ========================================== */
+.toolbar {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.page{
-  width:210mm;
-  min-height:297mm;
-  margin:auto;
-  background:white;
-  padding:10mm;
-  box-sizing:border-box;
+button {
+  padding: 10px 20px;
+  background: #0d47a1;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
 }
 
-.top-row{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:10px;
+/* ==========================================
+   STRUTTURA PAGINA FISSA (A4 SINGLE PAGE)
+   ========================================== */
+.page {
+  width: 210mm;
+  height: 297mm; /* Forziamo l'altezza esatta dell'A4 */
+  margin: auto;
+  background: white;
+  padding: 12mm 10mm; /* Bilanciamento dei margini interni */
+  display: flex;
+  flex-direction: column;
 }
 
-.left-title{
-  width:52%;
-  margin-top:120px;
+/* ==========================================
+   INTESTAZIONE (TOP ROW)
+   ========================================== */
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
 }
 
-.left-title h1{
-  background:#0d47a1;
-  color:white;
-  font-size:20px;
-  padding:8px;
-  margin:0;
+.left-title {
+  width: 55%;
+  /* Rimosso il margin-top di 120px che spingeva tutto in basso */
 }
 
-.left-title h2{
-  background:#0d47a1;
-  color:white;
-  font-size:12px;
-  padding:5px 8px;
-  margin:0;
-  font-weight:normal;
+.left-title h1 {
+  background: #0d47a1;
+  color: white;
+  font-size: 16px; /* Ridotto leggermente per eleganza */
+  padding: 6px 8px;
+  margin: 0;
 }
 
-.ticket-box{
-  width:42%;
+.left-title h2 {
+  background: #0d47a1;
+  color: white;
+  font-size: 10px;
+  padding: 4px 8px;
+  margin: 0;
+  font-weight: normal;
 }
 
-.field-inline{
-  display:flex;
-  align-items:center;
-  margin-bottom:10px;
-  gap:10px;
+.ticket-box {
+  width: 40%;
+  background: #fcfcfc;
+  border: 1px solid #ddd;
+  padding: 8px;
+  border-radius: 4px;
 }
 
-.field-inline input{
-  flex:1;
-  border:none;
-  border-bottom:1px dotted #777;
+.field-inline {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 8px;
 }
 
-.columns{
-  display:flex;
-  gap:20px;
+.field-inline label {
+  font-size: 10px;
+  font-weight: bold;
+  width: 80px;
 }
 
-.left-column{
-  width:50%;
+.field-inline input {
+  flex: 1;
+  border: none;
+  border-bottom: 1px dotted #777;
+  padding: 2px 0;
+  font-size: 11px;
 }
 
-.right-column{
-  width:50%;
+/* ==========================================
+   COLONNE DI LAYOUT
+   ========================================== */
+.columns {
+  display: flex;
+  gap: 15px;
+  flex: 1; /* Occupa lo spazio restante in verticale */
 }
 
-.section-title{
-  background:#0d47a1;
-  color:white;
-  padding:4px 6px;
-  font-size:12px;
-  margin-top:10px;
-  margin-bottom:10px;
-  font-weight:bold;
+.left-column {
+  width: 52%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.line-field{
-  margin-bottom:12px;
+.right-column {
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.line-field label{
-  display:block;
-  font-size:11px;
-  margin-bottom:3px;
+/* Titoli delle macro-sezioni */
+.section-title {
+  background: #0d47a1;
+  color: white;
+  padding: 4px 6px;
+  font-size: 11px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
-.line-field input{
-  width:100%;
-  border:none;
-  border-bottom:1px dotted #888;
-  padding:4px 0;
+/* ==========================================
+   CAMPI DI INPUT (COLONNA SINISTRA)
+   ========================================== */
+.line-field {
+  display: flex;
+  align-items: center; /* Allinea label e input sulla stessa riga per risparmiare spazio */
+  margin-bottom: 4px;
 }
 
-.line-field textarea{
-  width:100%;
-  height:80px;
-  border:none;
-  border-bottom:1px dotted #888;
+.line-field label {
+  font-size: 10px;
+  font-weight: bold;
+  width: 90px;
+  flex-shrink: 0;
 }
 
-.schema-box{
-  height:220px;
-  border-bottom:1px dotted #888;
-  margin-bottom:20px;
-  font-size:12px;
+.line-field input {
+  flex: 1;
+  border: none;
+  border-bottom: 1px dotted #888;
+  padding: 2px 0;
+  font-size: 11px;
 }
 
-.checkbox-group{
-  margin:20px 0;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  font-size:12px;
+.line-field textarea {
+  flex: 1;
+  height: 35px; /* Ottimizzato per la riga dei componenti sostituiti */
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 4px;
+  font-size: 10px;
+  resize: none;
 }
 
-.firma-box{
-  height:70px;
-  border:1px dashed #999;
-  margin-bottom:15px;
-  padding:5px;
-  font-size:12px;
+/* Box per lo schema dell'impianto */
+.schema-box {
+  height: 110px; /* Ridotto da 220px per evitare il salto pagina */
+  border: 1px dashed #888;
+  background: #fafafa;
+  margin: 5px 0;
+  font-size: 11px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
 }
 
-.check-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:11px;
+.checkbox-group {
+  margin: 5px 0;
+  display: flex;
+  flex-direction: row; /* Disposti in orizzontale anziché in verticale per risparmiare spazio */
+  justify-content: space-between;
+  font-size: 11px;
+  background: #f5f5f5;
+  padding: 6px;
+  border-radius: 3px;
 }
 
-.check-table th{
-  background:#0d47a1;
-  color:white;
-  padding:5px;
+.checkbox-group label {
+  margin-left: 5px;
 }
 
-.check-table td{
-  border-bottom:1px solid #ccc;
-  padding:5px;
+/* Box per le Firme */
+.firma-box {
+  height: 50px; /* Ridotto da 70px */
+  border: 1px dashed #999;
+  margin-top: 2px;
+  padding: 4px;
+  font-size: 9px;
+  color: #555;
+  background: #fafafa;
+  border-radius: 4px;
 }
 
-.notes-title{
-  background:#0d47a1;
-  color:white;
-  padding:5px;
-  margin-top:20px;
-  font-size:12px;
+/* ==========================================
+   TABELLA E CONTENUTI (COLONNA DESTRA)
+   ========================================== */
+.check-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
 }
 
-.notes-checks{
-  display:flex;
-  justify-content:space-between;
-  margin:10px 0;
-  font-size:11px;
+.check-table th {
+  background: #0d47a1;
+  color: white;
+  padding: 4px;
+  font-size: 10px;
 }
 
-.big-notes{
-  width:100%;
-  height:180px;
-  border:none;
-  border-bottom:1px dotted #999;
+.check-table td {
+  border: 1px solid #ddd;
+  padding: 4px;
 }
 
-.privacy-box{
-  margin-top:20px;
-  font-size:10px;
-  text-align:justify;
+.check-table td:first-child {
+  width: 70%;
 }
 
-.privacy-consent{
-  margin-top:10px;
-  display:flex;
-  gap:20px;
+.check-table td:not(:first-child) {
+  text-align: center;
 }
 
+/* Note */
+.notes-title {
+  background: #0d47a1;
+  color: white;
+  padding: 4px 6px;
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.notes-checks {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.big-notes {
+  width: 100%;
+  height: 120px; /* Ridotto da 180px per mantenere tutto nel foglio */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px;
+  font-size: 11px;
+  resize: none;
+}
+
+/* Privacy */
+.privacy-box {
+  margin-top: 5px;
+  font-size: 9px;
+  text-align: justify;
+  line-height: 1.2;
+  border: 1px solid #eee;
+  padding: 6px;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+.privacy-box h3 {
+  font-size: 10px;
+  margin-bottom: 2px;
+  color: #0d47a1;
+}
+
+.privacy-consent {
+  margin-top: 4px;
+  display: flex;
+  gap: 15px;
+  font-weight: bold;
+}
+
+/* ==========================================
+   REGOLE DI STAMPA / GENERAZIONE PDF
+   ========================================== */
 @media print {
-
-  body{
-    background:white;
-    padding:0;
+  body {
+    background: white;
+    padding: 0;
   }
 
-  .toolbar{
-    display:none;
+  .toolbar {
+    display: none; /* Nasconde i bottoni nel PDF */
   }
 
-  .page{
-    margin:0;
-    width:100%;
+  .page {
+    margin: 0;
+    border: none;
+    width: 210mm;
+    height: 297mm;
   }
-
 }
