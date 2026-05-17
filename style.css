@@ -1,6 +1,3 @@
-/* ==========================================
-   RESET GENERALE & OTTIMIZZAZIONE A4
-   ========================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -31,10 +28,9 @@ button {
 }
 
 .btn-clear {
-  background: #dc2626; /* Pulsante rosso per cancellare i disegni */
+  background: #dc2626;
 }
 
-/* Pagina A4 Rigida per html2pdf */
 .page {
   width: 210mm;
   height: 297mm;
@@ -45,9 +41,6 @@ button {
   flex-direction: column;
 }
 
-/* ==========================================
-   INTESTAZIONE (TOP ROW)
-   ========================================== */
 .top-row {
   display: flex;
   justify-content: space-between;
@@ -113,9 +106,6 @@ button {
   background: transparent;
 }
 
-/* ==========================================
-   STRUTTURA COLONNE
-   ========================================== */
 .columns {
   display: flex;
   gap: 12px;
@@ -134,7 +124,6 @@ button {
   flex-direction: column;
 }
 
-/* Titoli delle Sezioni Blu */
 .section-title {
   background: #0d47a1;
   color: white;
@@ -146,9 +135,6 @@ button {
   text-transform: uppercase;
 }
 
-/* ==========================================
-   CAMPI COLONNA SINISTRA
-   ========================================== */
 .line-field {
   display: flex;
   align-items: flex-end;
@@ -170,7 +156,6 @@ button {
   padding-bottom: 1px;
 }
 
-/* NUOVI STILI AGGIORNATI PER I CANVAS INTERATTIVI */
 .schema-container, .firma-container {
   display: flex;
   flex-direction: column;
@@ -185,16 +170,18 @@ button {
   padding-bottom: 2px;
 }
 
+/* SCHEMA ALLARGATO VERSO IL BASSO A 180PX */
 .schema-container canvas {
   border: 1px dashed #777;
-  height: 75px;
-  cursor: crosshair; /* Cambia cursore per far capire che si può disegnare */
+  height: 180px; 
+  cursor: crosshair;
   background: #fafafa;
 }
 
+/* FIRME COMPATTE E PERFETTAMENTE ALLINEATE ALLA FINE DEL FOGLIO */
 .firma-container canvas {
   border: 1px dotted #000;
-  height: 42px;
+  height: 55px;
   cursor: crosshair;
   background: #fbfbfb;
 }
@@ -249,9 +236,6 @@ button {
   font-size: 9.5px;
 }
 
-/* ==========================================
-   ELEMENTI COLONNA DESTRA
-   ========================================== */
 .section-title-table {
   background: #0d47a1;
   color: white;
