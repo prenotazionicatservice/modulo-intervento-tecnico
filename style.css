@@ -27,6 +27,11 @@ button {
   cursor: pointer;
   font-size: 14px;
   border-radius: 4px;
+  margin: 0 5px;
+}
+
+.btn-clear {
+  background: #dc2626; /* Pulsante rosso per cancellare i disegni */
 }
 
 /* Pagina A4 Rigida per html2pdf */
@@ -35,7 +40,7 @@ button {
   height: 297mm;
   margin: auto;
   background: white;
-  padding: 8mm 8mm; /* Margini compatti per contenere l'Informativa */
+  padding: 8mm 8mm; 
   display: flex;
   flex-direction: column;
 }
@@ -165,17 +170,33 @@ button {
   padding-bottom: 1px;
 }
 
-.schema-box {
-  height: 65px;
-  border: 1px dashed #777;
-  margin: 5px 0;
-  font-size: 10px;
-  color: #444;
+/* NUOVI STILI AGGIORNATI PER I CANVAS INTERATTIVI */
+.schema-container, .firma-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  margin: 3px 0;
+  background: #fdfdfd;
+}
+
+.canvas-label {
+  font-size: 8.5px;
   font-weight: bold;
+  color: #333;
+  padding-bottom: 2px;
+}
+
+.schema-container canvas {
+  border: 1px dashed #777;
+  height: 75px;
+  cursor: crosshair; /* Cambia cursore per far capire che si può disegnare */
   background: #fafafa;
+}
+
+.firma-container canvas {
+  border: 1px dotted #000;
+  height: 42px;
+  cursor: crosshair;
+  background: #fbfbfb;
 }
 
 .checkbox-group {
@@ -226,17 +247,6 @@ button {
   resize: none;
   padding: 3px;
   font-size: 9.5px;
-}
-
-.firma-box {
-  height: 42px;
-  border: 1px dotted #000;
-  margin-top: 4px;
-  padding: 3px;
-  font-size: 8.5px;
-  font-weight: bold;
-  color: #333;
-  background: #fbfbfb;
 }
 
 /* ==========================================
@@ -301,7 +311,6 @@ button {
   vertical-align: middle;
 }
 
-/* Testo Declinazione Responsabilità */
 .legal-disclaimer {
   font-size: 7.2px;
   text-align: justify;
@@ -313,7 +322,6 @@ button {
   border: 1px solid #ddd;
 }
 
-/* Note */
 .notes-title {
   background: #0d47a1;
   color: white;
@@ -341,7 +349,6 @@ button {
   font-size: 9px;
 }
 
-/* Privacy Box */
 .privacy-box {
   margin-top: 4px;
   border: 1px solid #999;
@@ -364,7 +371,7 @@ button {
 }
 
 .privacy-box p {
-  font-size: 6.2px; /* Ridotto per far entrare il testo legale completo in un'unica pagina */
+  font-size: 6.2px;
   text-align: justify;
   line-height: 1.1;
   color: #222;
@@ -400,9 +407,6 @@ button {
   font-size: 7.5px !important;
 }
 
-/* ==========================================
-   STAMPA
-   ========================================== */
 @media print {
   body { background: white; padding: 0; }
   .toolbar { display: none; }
