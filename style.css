@@ -394,7 +394,15 @@ button {
 @media print {
   body { background: white; padding: 0; }
   .toolbar { display: none; }
-  .page { margin: 0; border: none; width: 210mm; height: 297mm; }
+  .page { 
+    margin: 0; 
+    border: none; 
+    width: 210mm; 
+    height: 297mm; 
+    /* Forza la stampa delle immagini di sfondo e della filigrana */
+    -webkit-print-color-adjust: exact; 
+    print-color-adjust: exact;
+  }
 }
 /* FILIGRANA LOGO CORRETTA */
 
