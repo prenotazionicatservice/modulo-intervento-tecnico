@@ -419,7 +419,7 @@ button {
     background-image: url('logo.PNG'); 
     background-repeat: no-repeat;
     background-position: center 25%;
-    background-size: 28%; /* Se risulta troppo piccolo, prova ad alzarlo a 40% o 50% */
+    background-size: 60%; /* Se risulta troppo piccolo, prova ad alzarlo a 40% o 50% */
     opacity: 0.12;
     filter: grayscale(100%);
     mix-blend-mode: multiply;
