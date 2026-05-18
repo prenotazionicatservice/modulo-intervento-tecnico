@@ -411,14 +411,10 @@ button {
 
     background-image: url('logo.PNG');
     background-repeat: no-repeat;
+    background-position: center 20%
+     background-size: 28%;
 
-    background-position: center 30%
-
-    background-size: 42%;
-
-   background-origin: content-box;
-
-    opacity: 0.15;
+    opacity: 0.12;
 
     filter: grayscale(100%);
 
