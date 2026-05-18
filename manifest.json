@@ -1,7 +1,7 @@
 {
-  "name": "Prenotazione Intervento",
-  "short_name": "Interventi",
-  "description": "Modulo tecnico per la gestione e registrazione degli interventi",
+  "name": "Modulo intervento CAT",
+  "short_name": "Modulo CAT",
+  "description": "Modulo rapporto tecnico per impianto termico < 35 KW",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ececec",
