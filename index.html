@@ -319,12 +319,14 @@
 </div>
 
 <script>
+
 function initCanvas(canvasId, targetHeight) {
+
   const canvas = document.getElementById(canvasId);
   const ctx = canvas.getContext('2d');
+
   let drawing = false;
 
-  // Assegna larghezza e altezza precise basate sul CSS
   canvas.width = canvas.parentElement.clientWidth - 2;
   canvas.height = targetHeight;
 
@@ -332,81 +334,139 @@ function initCanvas(canvasId, targetHeight) {
   ctx.lineCap = 'round';
   ctx.strokeStyle = '#000000';
 
-  canvas.addEventListener('mousedown', (e) => { drawing = true; draw(e, canvas, ctx); });
-  canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
-  canvas.addEventListener('mousemove', (e) => { draw(e, canvas, ctx); });
+  // MOUSE
+  canvas.addEventListener('mousedown', (e) => {
+    drawing = true;
+    draw(e, canvas, ctx);
+  });
 
-  canvas.addEventListener('touchstart', (e) => { drawing = true; drawTouch(e, canvas, ctx); e.preventDefault(); }, { passive: false });
-  canvas.addEventListener('touchend', () => { drawing = false; ctx.beginPath(); }, { passive: false });
-  canvas.addEventListener('touchmove', (e) => { drawTouch(e, canvas, ctx); e.preventDefault(); }, { passive: false });
+  canvas.addEventListener('mouseup', () => {
+    drawing = false;
+    ctx.beginPath();
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!drawing) return;
+    draw(e, canvas, ctx);
+  });
+
+  // TOUCH
+  canvas.addEventListener('touchstart', (e) => {
+    drawing = true;
+    drawTouch(e, canvas, ctx);
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', () => {
+    drawing = false;
+    ctx.beginPath();
+  }, { passive: false });
+
+  canvas.addEventListener('touchmove', (e) => {
+    if (!drawing) return;
+    drawTouch(e, canvas, ctx);
+    e.preventDefault();
+  }, { passive: false });
+
 }
 
 function draw(e, canvas, ctx) {
-  if (!ctx.canvas.parentElement.offsetParent || !e.buttons && e.type === 'mousemove') return;
+
   const rect = canvas.getBoundingClientRect();
+
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
   ctx.lineTo(x, y);
   ctx.stroke();
+
   ctx.beginPath();
   ctx.moveTo(x, y);
+
 }
 
 function drawTouch(e, canvas, ctx) {
-  if (e.touches.length === 0) return;
+
   const rect = canvas.getBoundingClientRect();
+
   const touch = e.touches[0];
+
   const x = touch.clientX - rect.left;
   const y = touch.clientY - rect.top;
 
   ctx.lineTo(x, y);
   ctx.stroke();
+
   ctx.beginPath();
   ctx.moveTo(x, y);
+
 }
 
 function clearAllCanvases() {
-  ['canvas-schema', 'canvas-firma-tecnico', 'canvas-firma-cliente'].forEach(id => {
+
+  [
+    'canvas-schema',
+    'canvas-firma-tecnico',
+    'canvas-firma-cliente'
+  ].forEach(id => {
+
     const canvas = document.getElementById(id);
+
     const ctx = canvas.getContext('2d');
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   });
+
 }
 
-<script>
+window.onload = function() {
+
+  initCanvas('canvas-schema', 180);
+
+  initCanvas('canvas-firma-tecnico', 55);
+
+  initCanvas('canvas-firma-cliente', 55);
+
+};
 
 async function downloadPDF() {
 
   const element = document.getElementById('modulo');
 
   const opt = {
+
     margin: 0,
+
     filename: 'rapporto-tecnico-firmato.pdf',
+
     image: {
       type: 'jpeg',
       quality: 1
     },
+
     html2canvas: {
       scale: 2,
       useCORS: true
     },
+
     jsPDF: {
       unit: 'mm',
       format: 'a4',
       orientation: 'portrait'
     }
+
   };
 
   try {
 
-    // CREA PDF
-    const worker = html2pdf().set(opt).from(element);
+    const worker = html2pdf()
+      .set(opt)
+      .from(element);
 
-    // OTTIENI BLOB
-    const pdfBlob = await worker.output('blob');
+    const pdfBlob =
+      await worker.output('blob');
 
-    // CREA FILE
     const file = new File(
       [pdfBlob],
       'rapporto-tecnico-firmato.pdf',
@@ -423,14 +483,18 @@ async function downloadPDF() {
     ) {
 
       await navigator.share({
+
         files: [file],
+
         title: 'Rapporto Tecnico',
+
         text: 'Invio rapporto tecnico'
+
       });
 
     } else {
 
-      // PC DOWNLOAD
+      // PC
       await worker.save();
 
     }
@@ -439,23 +503,15 @@ async function downloadPDF() {
 
     console.error(err);
 
-    // FALLBACK SICURO
-    html2pdf().set(opt).from(element).save();
+    html2pdf()
+      .set(opt)
+      .from(element)
+      .save();
 
   }
 
 }
 
-</script>
-
-window.onload = function() {
-  initCanvas('canvas-schema', 180);
-  initCanvas('canvas-firma-tecnico', 55);
-  initCanvas('canvas-firma-cliente', 55);
-};
-
-save();
-}
 </script>
 
 </body>
