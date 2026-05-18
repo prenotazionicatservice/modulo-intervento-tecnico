@@ -396,33 +396,33 @@ button {
   .toolbar { display: none; }
   .page { margin: 0; border: none; width: 210mm; height: 297mm; }
 }
+/* FILIGRANA LOGO CORRETTA */
 
-/* FILIGRANA LOGO */
-
-.form-container {
+.page {
     position: relative;
     overflow: hidden;
 }
 
-.form-container::before {
+.page::before {
     content: "";
     position: absolute;
     inset: 0;
-
-    background-image: url('logo.PNG');
+    /* Controlla che il nome del file e l'estensione (maiuscolo/minuscolo) siano identici */
+    background-image: url('logo.PNG'); 
     background-repeat: no-repeat;
-    background-position: center 20%
-     background-size: 28%;
-
+    background-position: center 25%;
+    background-size: 28%; /* Se risulta troppo piccolo, prova ad alzarlo a 40% o 50% */
     opacity: 0.12;
-
     filter: grayscale(100%);
-
-  mix-blend-mode: multiply;
-
+    mix-blend-mode: multiply;
     pointer-events: none;
-
     z-index: 0;
+}
+
+/* Mantiene tutto il contenuto sopra il logo in modo che rimanga leggibile */
+.page > * {
+    position: relative;
+    z-index: 1;
 }
 
 /* Mantiene il contenuto sopra il logo */
