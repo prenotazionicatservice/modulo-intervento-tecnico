@@ -1,11 +1,11 @@
-const CACHE_NAME = 'interventi-v2';
+const CACHE_NAME = 'interventi-v3';
 const ASSETS = [
   'index.html',
   'style.css',
   'logo.PNG',
-  'icon-192.png',
-  'icon-512.png',
-  'icon-apple.png'
+  'Icon-192.png',
+  'Icon-512.png',
+  'icon-180.png'
 ];
 
 // Installazione della PWA e salvataggio dei file in cache
