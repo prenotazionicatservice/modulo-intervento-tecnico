@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Modulo Rapporto Tecnico</title>
+  
+  <!-- TAG SPECIFICI PER PWA (ANDROID & BROWSER) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d47a1">
+
+  <!-- TAG SPECIFICI PER IOS / SAFARI (ANTEPRIMA E ICONE HOME) -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Interventi">
+  <link rel="apple-touch-icon" href="icon-apple.png">
+
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
@@ -52,7 +63,8 @@
 
       <div class="line-field">
         <label>Cognome/Nome</label>
-        <input type="text">
+        <!-- Aggiunto id per validare in modo sicuro la presenza di entrambi i dati -->
+        <input type="text" id="cliente-nominativo" placeholder="es. Rossi Mario">
       </div>
 
       <div class="line-field">
@@ -296,7 +308,7 @@
         <p class="privacy-intro">Egregio Signore, Gent.ma Signora,</p>
         <p>
           il titolare del trattamento dei suoi dati personali (di seguito "Società" rilascia la presente informativa nel rispetto della disciplina europea e italiana in materia di protezione dei dati personali. La Società ha nominato un responsabile della protezione dei dati (DPO), che potrà contattare scrivendo al seguente recapito: ____________________.<br>
-          <strong>Finalità e base giuridica:</strong> I Suoi dati personali saranno trattati per le seguenti finalità: A) fornire assistenza tecnica; B) rispondere a Sue specifiche richieste; C) adempiere ad obblighi di legge di natura amministrativa, contabile, fiscale, regolamenti, normative comunitarie e/o extracomunitarie, D) gestire l'eventuale contenzioso. In relation a tali finalità, il Suo consenso non è richiesto. Invero, la base giuridica del trattamento è costituita dalla necessità per il perseguimento delle predette finalità; E) solo previo suo specifico e distinto consenso per l'invio, anche con modalità automatizzate, di materiale pubblicitario, informative ed informazioni commerciali, sondaggi di opinione e di gradimento, newsletter e/o inviti ad eventi di cui il Titolare sia parte o l'organizzatore (di seguito, "Finalità Promozionali"). Il trattamento sarà improntato sui principi di correttezza, liceità, trasparenza e di tutela della Sua riservatezza e dei Suoi diritti.<br>
+          <strong>Finalità e base giuridica:</strong> I Suoi dati personali saranno trattati per le seguenti finalità: A) fornire assistenza tecnica; B) rispondere a Sue specifiche richieste; C) adempiere ad obblighi di legge di natura amministrativa, contabile, fiscale, regolamenti, normative comunitarie e/o extracomunitarie, D) gestire l'eventuale contenzioso. In relation a tali finalità, il Suo consenso non è richiesto. Invero, la base giuridica del trattamento è costituita dalla necessità per il perseguimento delle predette finalità; E) solo previo suo specifico e distinto consenso for l'invio, anche con modalità automatizzate, di materiale pubblicitario, informative ed informazioni commerciali, sondaggi di opinione e di gradimento, newsletter e/o inviti ad eventi di cui il Titolare sia parte o l'organizzatore (di seguito, "Finalità Promozionali"). Il trattamento sarà improntato sui principi di correttezza, liceità, trasparenza e di tutela della Sua riservatezza e dei Suoi diritti.<br>
           <strong>Periodo di conservazione dei dati:</strong> I Suoi dati personali saranno trattati: - per le finalità di cui ai punti A), B), C) e D) anche dopo l'intervento di assistenza tecnica e/o l'evasione della sua richiesta di informazioni per l'espletamento di tutti gli eventuali adempimenti connessi o derivanti dall'intervento stesso per il periodo di durata prescritto delle leggi tempo per tempo vigenti e secondo il termine di prescrizione dei diritti; - per le Finalità Promozionali di cui al punto E).<br>
           <strong>Natura del conferimento dei dati e conseguenze in caso di rifiuto:</strong> Il conferimento dei dati è: - Per le finalità di cui ai punti A), B), C) e D) obbligatorio è pertanto l'eventuale rifiuto a fornirli in tutto o in parte può dar luogo all'impossibilità per la ns. Ditta di evadere la richiesta di assistenza o di svolgere correttamente tutti gli adempimenti correlati. - Per le Finalità di cui al punto E) facoltativo, perciò Lei potrà decidere di non conferire alcun dato o di negare successivamente la possibilità di trattare dati già forniti: in tal caso, non potrà ricevere le comunicazioni sopra indicate.<br>
           <strong>Categorie dei destinatari:</strong> Con riferimento alle finalità di cui ai predetti punti A), B), C), D) ed E), i dati raccolti ed elaborati potranno essere comunicati a figure interne autorizzate al trattamento in ragione delle rispettive mansioni, nonché alle seguenti categorie di soggetti esterni: - istituti di credito; - avvocati e consulenti legal; - Enti Pubblici e privati, anche a seguito di ispezioni e verifiche - provider sito web, cloud provider, fornitori, tecnici addetti all'assistenza hardware e software, etc. - società o altri soggetti terzi che svolgono attività in outsourcing. Tali destinatari, ove dovessero trattare dati per conto della nostra Società, saranno designati come responsabili del trattamento, con apposito contratto od altro atto giuridico. Trasferimento dati verso un paese terzo e/o un'organizzazione internazionale - Per esigenze strettamente legate al perseguimento delle finalità sopra specificate, alcuni Suoi dati personali potranno essere oggetto di trasferimento a Paesi e/o organizzazioni extra UE. Di volta in volta, il presupposto del lecito trasferimento dei dati personali potrà essere rappresentato da: - dall'esistenza di decisioni di adeguatezza emanate dalla Commissione UE per taluni Paesi che garantiscono il medesimo livello di protezione dei dati trasferiti garantito nella Unione Europea. - Dal rispetto - per gli USA - delle specifiche garanzie a tutela dei dati personali previste dall'accordo denominato Privacy Shield; - delle clausole contrattuali tipo indicate dalla Commissione europea.<br>
@@ -321,10 +333,8 @@
 <script>
 
 function initCanvas(canvasId, targetHeight) {
-
   const canvas = document.getElementById(canvasId);
   const ctx = canvas.getContext('2d');
-
   let drawing = false;
 
   canvas.width = canvas.parentElement.clientWidth - 2;
@@ -339,179 +349,124 @@ function initCanvas(canvasId, targetHeight) {
     drawing = true;
     draw(e, canvas, ctx);
   });
-
   canvas.addEventListener('mouseup', () => {
     drawing = false;
     ctx.beginPath();
   });
-
   canvas.addEventListener('mousemove', (e) => {
     if (!drawing) return;
     draw(e, canvas, ctx);
   });
 
-  // TOUCH
+  // TOUCH (Ottimizzato per Smartphone/iOS)
   canvas.addEventListener('touchstart', (e) => {
     drawing = true;
     drawTouch(e, canvas, ctx);
     e.preventDefault();
   }, { passive: false });
-
   canvas.addEventListener('touchend', () => {
     drawing = false;
     ctx.beginPath();
   }, { passive: false });
-
   canvas.addEventListener('touchmove', (e) => {
     if (!drawing) return;
     drawTouch(e, canvas, ctx);
     e.preventDefault();
   }, { passive: false });
-
 }
 
 function draw(e, canvas, ctx) {
-
   const rect = canvas.getBoundingClientRect();
-
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
-
   ctx.lineTo(x, y);
   ctx.stroke();
-
   ctx.beginPath();
   ctx.moveTo(x, y);
-
 }
 
 function drawTouch(e, canvas, ctx) {
-
   const rect = canvas.getBoundingClientRect();
-
   const touch = e.touches[0];
-
   const x = touch.clientX - rect.left;
   const y = touch.clientY - rect.top;
-
   ctx.lineTo(x, y);
   ctx.stroke();
-
   ctx.beginPath();
   ctx.moveTo(x, y);
-
 }
 
 function clearAllCanvases() {
-
-  [
-    'canvas-schema',
-    'canvas-firma-tecnico',
-    'canvas-firma-cliente'
-  ].forEach(id => {
-
+  ['canvas-schema', 'canvas-firma-tecnico', 'canvas-firma-cliente'].forEach(id => {
     const canvas = document.getElementById(id);
-
     const ctx = canvas.getContext('2d');
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   });
-
 }
 
 window.onload = function() {
-
   initCanvas('canvas-schema', 180);
-
   initCanvas('canvas-firma-tecnico', 55);
-
   initCanvas('canvas-firma-cliente', 55);
-
 };
 
+// Funzione di validazione del Nome e Cognome del cliente
+function validaNominativo() {
+  const campo = document.getElementById('cliente-nominativo').value.trim();
+  // Divide il testo inserito usando gli spazi
+  const parole = campo.split(/\s+/);
+  
+  // Controlla che ci siano almeno due parole (es. Nome e Cognome) e che non siano vuote
+  if (parole.length < 2 || parole[0] === "" || parole[1] === "") {
+    alert("Attenzione: Inserisci sia il COGNOME che il NOME del cliente prima di scaricare il PDF.");
+    return false;
+  }
+  return true;
+}
+
 async function downloadPDF() {
+  // Avvia il controllo bloccante sul nome
+  if (!validaNominativo()) return;
 
   const element = document.getElementById('modulo');
-
   const opt = {
-
     margin: 0,
-
     filename: 'rapporto-tecnico-firmato.pdf',
-
-    image: {
-      type: 'jpeg',
-      quality: 1
-    },
-
-    html2canvas: {
-      scale: 2,
-      useCORS: true
-    },
-
-    jsPDF: {
-      unit: 'mm',
-      format: 'a4',
-      orientation: 'portrait'
-    }
-
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   try {
+    const worker = html2pdf().set(opt).from(element);
+    const pdfBlob = await worker.output('blob');
+    const file = new File([pdfBlob], 'rapporto-tecnico-firmato.pdf', { type: 'application/pdf' });
 
-    const worker = html2pdf()
-      .set(opt)
-      .from(element);
-
-    const pdfBlob =
-      await worker.output('blob');
-
-    const file = new File(
-      [pdfBlob],
-      'rapporto-tecnico-firmato.pdf',
-      {
-        type: 'application/pdf'
-      }
-    );
-
-    // SMARTPHONE
-    if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare({ files: [file] })
-    ) {
-
+    // CONDIVISIONE SMARTPHONE (iOS / Android)
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({
-
         files: [file],
-
         title: 'Rapporto Tecnico',
-
         text: 'Invio rapporto tecnico'
-
       });
-
     } else {
-
-      // PC
+      // DOWNLOAD PC
       await worker.save();
-
     }
-
   } catch (err) {
-
     console.error(err);
-
-    html2pdf()
-      .set(opt)
-      .from(element)
-      .save();
-
+    html2pdf().set(opt).from(element).save();
   }
-
 }
 
+// REGISTRAZIONE DEL SERVICE WORKER PER ATTIVARE LA PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('Service Worker registrato con successo!', reg))
+      .catch(err => console.error('Errore nella registrazione del Service Worker:', err));
+  });
+}
 </script>
 
 </body>
