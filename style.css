@@ -396,3 +396,38 @@ button {
   .toolbar { display: none; }
   .page { margin: 0; border: none; width: 210mm; height: 297mm; }
 }
+
+/* FILIGRANA LOGO */
+
+.form-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.form-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image: url('logo.PNG');
+    background-repeat: no-repeat;
+
+    background-position: center center;
+
+    background-size: 45%;
+
+    opacity: 0.05;
+
+    filter: grayscale(100%);
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+/* Mantiene il contenuto sopra il logo */
+
+.form-container > * {
+    position: relative;
+    z-index: 1;
+}
