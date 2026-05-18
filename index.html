@@ -374,7 +374,7 @@ function clearAllCanvases() {
   });
 }
 
-  <script>
+<script>
 
 async function downloadPDF() {
 
@@ -398,27 +398,29 @@ async function downloadPDF() {
     }
   };
 
-  // CREA PDF COME BLOB
-  const worker = html2pdf().set(opt).from(element);
+  try {
 
-  const pdfBlob = await worker.outputPdf('blob');
+    // CREA PDF
+    const worker = html2pdf().set(opt).from(element);
 
-  // CREA FILE
-  const file = new File(
-    [pdfBlob],
-    'rapporto-tecnico-firmato.pdf',
-    {
-      type: 'application/pdf'
-    }
-  );
+    // OTTIENI BLOB
+    const pdfBlob = await worker.output('blob');
 
-  // SMARTPHONE → MENU CONDIVISIONE
-  if (
-    navigator.canShare &&
-    navigator.canShare({ files: [file] })
-  ) {
+    // CREA FILE
+    const file = new File(
+      [pdfBlob],
+      'rapporto-tecnico-firmato.pdf',
+      {
+        type: 'application/pdf'
+      }
+    );
 
-    try {
+    // SMARTPHONE
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({ files: [file] })
+    ) {
 
       await navigator.share({
         files: [file],
@@ -426,16 +428,19 @@ async function downloadPDF() {
         text: 'Invio rapporto tecnico'
       });
 
-    } catch (err) {
+    } else {
 
-      console.log('Condivisione annullata');
+      // PC DOWNLOAD
+      await worker.save();
 
     }
 
-  } else {
+  } catch (err) {
 
-    // PC → DOWNLOAD CLASSICO
-    worker.save();
+    console.error(err);
+
+    // FALLBACK SICURO
+    html2pdf().set(opt).from(element).save();
 
   }
 
