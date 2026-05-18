@@ -404,27 +404,43 @@ button {
     print-color-adjust: exact;
   }
 }
-/* FILIGRANA LOGO CORRETTA */
+/* FILIGRANA LOGO ANGOLATO */
 
 .page {
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* Fondamentale per non far uscire il logo ruotato dai bordi del foglio */
 }
 
 .page::before {
     content: "";
     position: absolute;
-    inset: 0;
-    /* Controlla che il nome del file e l'estensione (maiuscolo/minuscolo) siano identici */
+    
+    /* Centratura geometrica perfetta rispetto alla pagina */
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    
     background-image: url('logo.PNG'); 
     background-repeat: no-repeat;
-    background-position: center 25%;
-    background-size: 60%; /* Se risulta troppo piccolo, prova ad alzarlo a 40% o 50% */
-    opacity: 0.12;
+    background-position: center center; 
+    background-size: 75%; /* Regola la grandezza da qui (es. 55%, 60%) */
+    
+    opacity: 0.20; 
     filter: grayscale(100%);
     mix-blend-mode: multiply;
     pointer-events: none;
     z-index: 0;
+
+    /* Sposta l'asse al centro e ruota il logo. 
+       -45deg lo inclina in diagonale da in basso a sinistra a in alto a destra. */
+    transform: translate(-50%, -50%) rotate(-45deg); 
+}
+
+/* Mantiene tutto il contenuto sopra il logo */
+.page > * {
+    position: relative;
+    z-index: 1;
 }
 
 /* Mantiene tutto il contenuto sopra il logo in modo che rimanga leggibile */
