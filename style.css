@@ -412,13 +412,15 @@ button {
     background-image: url('logo.PNG');
     background-repeat: no-repeat;
 
-    background-position: center center;
+    background-position: center 45%
 
-    background-size: 45%;
+    background-size: 55%;
 
-    opacity: 0.05;
+    opacity: 0.15;
 
     filter: grayscale(100%);
+
+  mix-blend-mode: multiply;
 
     pointer-events: none;
 
