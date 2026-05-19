@@ -425,6 +425,97 @@ function validaNominativo() {
 }
 
 async function downloadPDF() {
+
+  // Controllo nominativo
+  if (!validaNominativo()) return;
+
+  // Recupera nome cliente
+  const nominativo = document
+    .getElementById('cliente-nominativo')
+    .value
+    .trim()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-zA-Z0-9_]/g, '');
+
+  // Data automatica
+  const oggi = new Date();
+
+  const giorno = String(oggi.getDate()).padStart(2, '0');
+  const mese = String(oggi.getMonth() + 1).padStart(2, '0');
+  const anno = oggi.getFullYear();
+
+  const dataFormato = `${giorno}-${mese}-${anno}`;
+
+  // Nome finale PDF
+  const nomeFile = nominativo
+    ? `Rapporto_${nominativo}_${dataFormato}.pdf`
+    : `Rapporto_${dataFormato}.pdf`;
+
+  const element = document.getElementById('modulo');
+
+  const opt = {
+    margin: 0,
+    filename: nomeFile,
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: {
+      scale: 2,
+      useCORS: true
+    },
+    jsPDF: {
+      unit: 'mm',
+      format: 'a4',
+      orientation: 'portrait'
+    }
+  };
+
+  try {
+
+    // Genera PDF
+    const worker = html2pdf().set(opt).from(element);
+
+    // Blob PDF
+    const pdfBlob = await worker.output('blob');
+
+    // File finale con nome dinamico
+    const file = new File(
+      [pdfBlob],
+      nomeFile,
+      { type: 'application/pdf' }
+    );
+
+    // Condivisione Smartphone (WhatsApp, Telegram, Mail ecc.)
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({ files: [file] })
+    ) {
+
+      await navigator.share({
+        files: [file],
+        title: 'Rapporto Tecnico',
+        text: 'Invio rapporto tecnico'
+      });
+
+    } else {
+
+      // Download PC
+      await worker.save();
+
+    }
+
+  } catch (err) {
+
+    console.error(err);
+
+    // Fallback sicurezza
+    html2pdf()
+      .set(opt)
+      .from(element)
+      .save();
+
+  }
+}
+
   // Avvia il controllo bloccante sul nome
   if (!validaNominativo()) return;
 
