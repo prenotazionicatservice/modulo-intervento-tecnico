@@ -41,6 +41,11 @@ button {
   flex-direction: column;
 }
 
+@page {
+  size: A4;
+  margin: 0;
+}
+
 .top-row {
   display: flex;
   justify-content: space-between;
