@@ -516,40 +516,6 @@ async function downloadPDF() {
   }
 }
 
-  // Avvia il controllo bloccante sul nome
-  if (!validaNominativo()) return;
-
-  const element = document.getElementById('modulo');
-  const opt = {
-    margin: 0,
-    filename: 'rapporto-tecnico-firmato.pdf',
-    image: { type: 'jpeg', quality: 1 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-
-  try {
-    const worker = html2pdf().set(opt).from(element);
-    const pdfBlob = await worker.output('blob');
-    const file = new File([pdfBlob], 'rapporto-tecnico-firmato.pdf', { type: 'application/pdf' });
-
-    // CONDIVISIONE SMARTPHONE (iOS / Android)
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({
-        files: [file],
-        title: 'Rapporto Tecnico',
-        text: 'Invio rapporto tecnico'
-      });
-    } else {
-      // DOWNLOAD PC
-      await worker.save();
-    }
-  } catch (err) {
-    console.error(err);
-    html2pdf().set(opt).from(element).save();
-  }
-}
-
 // REGISTRAZIONE DEL SERVICE WORKER PER ATTIVARE LA PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
