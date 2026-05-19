@@ -410,13 +410,13 @@ window.onload = function() {
   initCanvas('canvas-firma-cliente', 55);
 };
 
-// Funzione di validazione del Nome e Cognome del cliente
+  // Funzione di validazione del Nome e Cognome del cliente (DISATTIVATA)
 function validaNominativo() {
+  // Ritorna sempre vero per saltare il controllo del Nome e Cognome obbligatorio
+  return true; 
+
   const campo = document.getElementById('cliente-nominativo').value.trim();
-  // Divide il testo inserito usando gli spazi
   const parole = campo.split(/\s+/);
-  
-  // Controlla che ci siano almeno due parole (es. Nome e Cognome) e che non siano vuote
   if (parole.length < 2 || parole[0] === "" || parole[1] === "") {
     alert("Attenzione: Inserisci sia il COGNOME che il NOME del cliente prima di scaricare il PDF.");
     return false;
