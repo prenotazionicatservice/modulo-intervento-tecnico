@@ -57,15 +57,15 @@ content="width=device-width, initial-scale=1">
       </div>
       <div class="field-inline">
         <label>Data Intervento</label>
-        <input type="text" placeholder="    /    /    ">
+        <input type="text" id="data-intervento">
       </div>
       <div class="field-inline">
         <label>Ora ingresso</label>
-        <input type="time">
+        <input type="time" id="ora-ingresso">
       </div>
       <div class="field-inline">
         <label>Ora uscita</label>
-        <input type="time">
+        <input type="time" id="ora-uscita">
       </div>
     </div>
   </div>
@@ -464,6 +464,24 @@ function clearAllCanvases() {
 
 window.onload = function() {
   window.addEventListener('resize', () => {
+    function formatDateToday() {
+  const oggi = new Date();
+
+  const giorno = String(oggi.getDate()).padStart(2, '0');
+  const mese = String(oggi.getMonth() + 1).padStart(2, '0');
+  const anno = oggi.getFullYear();
+
+  return `${giorno}/${mese}/${anno}`;
+}
+
+function formatTimeNow() {
+  const now = new Date();
+
+  const ore = String(now.getHours()).padStart(2, '0');
+  const minuti = String(now.getMinutes()).padStart(2, '0');
+
+  return `${ore}:${minuti}`;
+}
 
   canvases.forEach(item => {
 
@@ -491,6 +509,13 @@ window.onload = function() {
   });
 
 });
+
+    // DATA INTERVENTO (oggi)
+  document.getElementById('data-intervento').value = formatDateToday();
+
+  // ORARIO USCITA (automatico all'apertura modulo)
+  document.getElementById('ora-uscita').value = formatTimeNow();
+  
   initCanvas('canvas-schema', 180);
   initCanvas('canvas-firma-tecnico', 55);
   initCanvas('canvas-firma-cliente', 55);
