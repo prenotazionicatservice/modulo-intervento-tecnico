@@ -370,6 +370,9 @@ function formatTimeNow() {
   return `${ore}:${minuti}`;
 }
 
+  let lastX = 0;
+let lastY = 0;
+  
 function initCanvas(canvasId, targetHeight) {
 
   const canvas = document.getElementById(canvasId);
@@ -397,6 +400,7 @@ ctx.scale(ratio, ratio);
     ctx.lineJoin = 'round';
     ctx.strokeStyle = '#000';
     ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
   }
 
   resizeCanvas();
@@ -439,8 +443,19 @@ ctx.scale(ratio, ratio);
 
     const pos = getPosition(e);
 
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
+    const pressure = e.pressure ? e.pressure : 0.5;
+
+ctx.lineWidth = 1.5 * pressure;
+
+const smoothing = 0.6;
+
+lastX = lastX * smoothing + pos.x * (1 - smoothing);
+lastY = lastY * smoothing + pos.y * (1 - smoothing);
+
+ctx.lineTo(lastX, lastY);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(lastX, lastY);
 
     e.preventDefault();
   }
@@ -459,6 +474,7 @@ ctx.scale(ratio, ratio);
 
   // Blocca gesture strane
   canvas.style.touchAction = 'none';
+  canvas.style.userSelect = 'none';
 
   canvases.push({
     canvas,
