@@ -351,6 +351,25 @@ content="width=device-width, initial-scale=1">
 
 const canvases = [];
 
+  function formatDateToday() {
+  const oggi = new Date();
+
+  const giorno = String(oggi.getDate()).padStart(2, '0');
+  const mese = String(oggi.getMonth() + 1).padStart(2, '0');
+  const anno = oggi.getFullYear();
+
+  return `${giorno}/${mese}/${anno}`;
+}
+
+function formatTimeNow() {
+  const now = new Date();
+
+  const ore = String(now.getHours()).padStart(2, '0');
+  const minuti = String(now.getMinutes()).padStart(2, '0');
+
+  return `${ore}:${minuti}`;
+}
+
 function initCanvas(canvasId, targetHeight) {
 
   const canvas = document.getElementById(canvasId);
@@ -464,26 +483,8 @@ function clearAllCanvases() {
 
 window.onload = function() {
   window.addEventListener('resize', () => {
-    function formatDateToday() {
-  const oggi = new Date();
 
-  const giorno = String(oggi.getDate()).padStart(2, '0');
-  const mese = String(oggi.getMonth() + 1).padStart(2, '0');
-  const anno = oggi.getFullYear();
-
-  return `${giorno}/${mese}/${anno}`;
-}
-
-function formatTimeNow() {
-  const now = new Date();
-
-  const ore = String(now.getHours()).padStart(2, '0');
-  const minuti = String(now.getMinutes()).padStart(2, '0');
-
-  return `${ore}:${minuti}`;
-}
-
-  canvases.forEach(item => {
+ canvases.forEach(item => {
 
     const oldImage = item.canvas.toDataURL();
 
