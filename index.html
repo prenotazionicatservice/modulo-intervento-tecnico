@@ -425,53 +425,45 @@ ctx.scale(ratio, ratio);
 
   }
 
-  function startDrawing(e) {
+function startDrawing(e) {
 
-    drawing = true;
-lastX = pos.x;
-lastY = pos.y;
+  drawing = true;
 
-    const pos = getPosition(e);
+  const pos = getPosition(e);
 
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
+  lastX = pos.x;
+  lastY = pos.y;
 
-    e.preventDefault();
-  }
+  ctx.beginPath();
+  ctx.moveTo(pos.x, pos.y);
+
+  e.preventDefault();
+}
 
 function draw(e) {
   if (!drawing || e.buttons === 0) return;
 
-    const pos = getPosition(e);
+  const pos = getPosition(e);
 
-const pressure = e.pressure && e.pressure > 0 ? e.pressure : 0.5;
+  const pressure = (e.pressure && e.pressure > 0) ? e.pressure : 0.5;
 
-ctx.lineWidth = 1.5 * pressure;
+  ctx.lineWidth = 1.5 * pressure;
 
-ctx.beginPath();
-ctx.moveTo(lastX, lastY);
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
 
-ctx.lineTo(pos.x, pos.y);
-ctx.stroke();
+  lastX = pos.x;
+  lastY = pos.y;
 
-lastX = pos.x;
-lastY = pos.y;
+  e.preventDefault();
+}
 
-ctx.lineTo(lastX, lastY);
-ctx.stroke();
-ctx.beginPath();
-
-lastX = pos.x;
-lastY = pos.y;
-
-    e.preventDefault();
-  }
-
-  function stopDrawing() {
-
-    drawing = false;
-    ctx.closePath();
-  }
+function stopDrawing() {
+  drawing = false;
+  ctx.closePath();
+}
 
   // Pointer Events = PERFETTO per tablet/stylus/mouse
   canvas.addEventListener('pointerdown', startDrawing);
