@@ -1,4 +1,4 @@
-const CACHE_NAME = 'interventi-v11';
+const CACHE_NAME = 'interventi-v12';
 const ASSETS = [
   'index.html',
   'style.css',
