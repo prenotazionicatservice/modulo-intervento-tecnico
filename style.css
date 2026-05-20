@@ -392,6 +392,12 @@ button {
   gap: 4px;
 }
 
+canvas {
+  width: 100%;
+  display: block;
+  touch-action: none;
+}
+
 .promo-text {
   font-size: 7.5px !important;
 }
