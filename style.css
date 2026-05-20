@@ -11,6 +11,11 @@ body {
   color: #000;
 }
 
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 .toolbar {
   text-align: center;
   margin-bottom: 10px;
@@ -33,14 +38,21 @@ button {
 
 .page {
   width: 210mm;
-  height: 297mm;
+  min-height: 297mm;
+
+  max-width: 100%;
+
   margin: auto;
   background: white;
-  padding: 8mm 8mm; 
+
+  padding: 8mm 8mm;
+
   display: flex;
   flex-direction: column;
-}
 
+  position: relative;
+  overflow: hidden;
+}
 @page {
   size: A4;
   margin: 0;
@@ -117,14 +129,10 @@ button {
   flex: 1;
 }
 
-.left-column {
-  width: 48%;
-  display: flex;
-  flex-direction: column;
-}
-
+.left-column,
 .right-column {
-  width: 52%;
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
 }
@@ -460,9 +468,45 @@ canvas {
     z-index: 1;
 }
 
-/* Mantiene il contenuto sopra il logo */
+/* TABLET E TELEFONI */
+@media screen and (max-width: 1024px) {
 
-.form-container > * {
-    position: relative;
-    z-index: 1;
+  body {
+    padding: 0;
+  }
+
+  .page {
+
+    width: 100%;
+    min-height: auto;
+
+    padding: 10px;
+  }
+
+  .top-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .left-title,
+  .ticket-box {
+    width: 100%;
+  }
+
+  .columns {
+    flex-direction: column;
+  }
+
+  .left-column,
+  .right-column {
+    width: 100%;
+  }
+
+  .check-table td {
+    font-size: 10px;
+  }
+
+  .privacy-box p {
+    font-size: 8px;
+  }
 }
