@@ -482,15 +482,21 @@ function clearAllCanvases() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-window.onload = function() {
+window.onload = function () {
 
+  // DATA AUTOMATICA (oggi)
   document.getElementById('data-intervento').value = formatDateToday();
+
+  // ORA USCITA = automatica (fine intervento → ora apertura modulo)
   document.getElementById('ora-uscita').value = formatTimeNow();
+
+  // ORA INGRESSO = vuota (la inserisci tu)
+  document.getElementById('ora-ingresso').value = "";
 
   initCanvas('canvas-schema', 180);
   initCanvas('canvas-firma-tecnico', 55);
   initCanvas('canvas-firma-cliente', 55);
-  };
+};
 
   let resizeTimeout;
 
@@ -521,10 +527,7 @@ window.addEventListener('resize', () => {
 
 });
 
-   // DATA INTERVENTO (oggi)
-  document.getElementById('data-intervento').value = formatDateToday();
-
-  // Funzione di validazione del Nome e Cognome del cliente (DISATTIVATA)
+    // Funzione di validazione del Nome e Cognome del cliente (DISATTIVATA)
 function validaNominativo() {
   // Ritorna sempre vero per saltare il controllo del Nome e Cognome obbligatorio
   return true; 
