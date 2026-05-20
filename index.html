@@ -428,6 +428,8 @@ ctx.scale(ratio, ratio);
   function startDrawing(e) {
 
     drawing = true;
+lastX = pos.x;
+lastY = pos.y;
 
     const pos = getPosition(e);
 
@@ -437,25 +439,30 @@ ctx.scale(ratio, ratio);
     e.preventDefault();
   }
 
-  function draw(e) {
-
-    if (!drawing) return;
+function draw(e) {
+  if (!drawing || e.buttons === 0) return;
 
     const pos = getPosition(e);
 
-    const pressure = e.pressure ? e.pressure : 0.5;
+const pressure = e.pressure && e.pressure > 0 ? e.pressure : 0.5;
 
 ctx.lineWidth = 1.5 * pressure;
 
-const smoothing = 0.6;
+ctx.beginPath();
+ctx.moveTo(lastX, lastY);
 
-lastX = lastX * smoothing + pos.x * (1 - smoothing);
-lastY = lastY * smoothing + pos.y * (1 - smoothing);
+ctx.lineTo(pos.x, pos.y);
+ctx.stroke();
+
+lastX = pos.x;
+lastY = pos.y;
 
 ctx.lineTo(lastX, lastY);
 ctx.stroke();
 ctx.beginPath();
-ctx.moveTo(lastX, lastY);
+
+lastX = pos.x;
+lastY = pos.y;
 
     e.preventDefault();
   }
