@@ -2,7 +2,12 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+content="width=device-width,
+initial-scale=1,
+maximum-scale=1,
+user-scalable=no">
+
   <title>Modulo Rapporto Tecnico</title>
   
   <!-- TAG SPECIFICI PER PWA (ANDROID & BROWSER) -->
@@ -332,68 +337,101 @@
 
 <script>
 
+const canvases = [];
+
 function initCanvas(canvasId, targetHeight) {
+
   const canvas = document.getElementById(canvasId);
   const ctx = canvas.getContext('2d');
+
   let drawing = false;
 
-  canvas.width = canvas.parentElement.clientWidth - 2;
-  canvas.height = targetHeight;
+  function resizeCanvas() {
 
-  ctx.lineWidth = 2;
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = '#000000';
+    const ratio = window.devicePixelRatio || 1;
 
-  // MOUSE
-  canvas.addEventListener('mousedown', (e) => {
+    const width = canvas.parentElement.clientWidth - 2;
+
+    canvas.style.width = width + 'px';
+    canvas.style.height = targetHeight + 'px';
+
+    canvas.width = width * ratio;
+    canvas.height = targetHeight * ratio;
+
+    ctx.scale(ratio, ratio);
+
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#000';
+    ctx.imageSmoothingEnabled = true;
+  }
+
+  resizeCanvas();
+
+  function getPosition(e) {
+
+    const rect = canvas.getBoundingClientRect();
+
+    if (e.touches && e.touches[0]) {
+
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+
+    }
+
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+
+  }
+
+  function startDrawing(e) {
+
     drawing = true;
-    draw(e, canvas, ctx);
-  });
-  canvas.addEventListener('mouseup', () => {
-    drawing = false;
+
+    const pos = getPosition(e);
+
     ctx.beginPath();
-  });
-  canvas.addEventListener('mousemove', (e) => {
-    if (!drawing) return;
-    draw(e, canvas, ctx);
-  });
+    ctx.moveTo(pos.x, pos.y);
 
-  // TOUCH (Ottimizzato per Smartphone/iOS)
-  canvas.addEventListener('touchstart', (e) => {
-    drawing = true;
-    drawTouch(e, canvas, ctx);
     e.preventDefault();
-  }, { passive: false });
-  canvas.addEventListener('touchend', () => {
+  }
+
+  function draw(e) {
+
+    if (!drawing) return;
+
+    const pos = getPosition(e);
+
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+
+    e.preventDefault();
+  }
+
+  function stopDrawing() {
+
     drawing = false;
-    ctx.beginPath();
-  }, { passive: false });
-  canvas.addEventListener('touchmove', (e) => {
-    if (!drawing) return;
-    drawTouch(e, canvas, ctx);
-    e.preventDefault();
-  }, { passive: false });
-}
+    ctx.closePath();
+  }
 
-function draw(e, canvas, ctx) {
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  ctx.lineTo(x, y);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-}
+  // Pointer Events = PERFETTO per tablet/stylus/mouse
+  canvas.addEventListener('pointerdown', startDrawing);
+  canvas.addEventListener('pointermove', draw);
+  canvas.addEventListener('pointerup', stopDrawing);
+  canvas.addEventListener('pointerleave', stopDrawing);
 
-function drawTouch(e, canvas, ctx) {
-  const rect = canvas.getBoundingClientRect();
-  const touch = e.touches[0];
-  const x = touch.clientX - rect.left;
-  const y = touch.clientY - rect.top;
-  ctx.lineTo(x, y);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x, y);
+  // Blocca gesture strane
+  canvas.style.touchAction = 'none';
+
+  canvases.push({
+    canvas,
+    resizeCanvas
+  });
 }
 
 function clearAllCanvases() {
@@ -405,6 +443,34 @@ function clearAllCanvases() {
 }
 
 window.onload = function() {
+  window.addEventListener('resize', () => {
+
+  canvases.forEach(item => {
+
+    const oldImage = item.canvas.toDataURL();
+
+    item.resizeCanvas();
+
+    const img = new Image();
+
+    img.onload = () => {
+
+      const ctx = item.canvas.getContext('2d');
+
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        item.canvas.width / (window.devicePixelRatio || 1),
+        item.canvas.height / (window.devicePixelRatio || 1)
+      );
+    };
+
+    img.src = oldImage;
+
+  });
+
+});
   initCanvas('canvas-schema', 180);
   initCanvas('canvas-firma-tecnico', 55);
   initCanvas('canvas-firma-cliente', 55);
