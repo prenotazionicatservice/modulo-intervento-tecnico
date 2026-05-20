@@ -36,6 +36,10 @@ button {
   background: #dc2626;
 }
 
+.btn-clear-all {
+  background: #991b1b;
+}
+
 .page {
   width: 210mm;
   min-height: 297mm;
