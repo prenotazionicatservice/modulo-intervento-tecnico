@@ -389,7 +389,8 @@ function initCanvas(canvasId, targetHeight) {
     canvas.width = width * ratio;
     canvas.height = targetHeight * ratio;
 
-    ctx.scale(ratio, ratio);
+ ctx.setTransform(1, 0, 0, 1, 0, 0);
+ctx.scale(ratio, ratio);   
 
     ctx.lineWidth = 1.8;
     ctx.lineCap = 'round';
@@ -482,32 +483,33 @@ function clearAllCanvases() {
 }
 
 window.onload = function() {
-  window.addEventListener('resize', () => {
 
- canvases.forEach(item => {
+  let resizeTimeout;
 
-    const oldImage = item.canvas.toDataURL();
+window.addEventListener('resize', () => {
 
-    item.resizeCanvas();
+  clearTimeout(resizeTimeout);
 
-    const img = new Image();
+  resizeTimeout = setTimeout(() => {
 
-    img.onload = () => {
+    canvases.forEach(item => {
 
-      const ctx = item.canvas.getContext('2d');
+      const oldImage = item.canvas.toDataURL();
 
-      ctx.drawImage(
-        img,
-        0,
-        0,
-        item.canvas.width / (window.devicePixelRatio || 1),
-        item.canvas.height / (window.devicePixelRatio || 1)
-      );
-    };
+      item.resizeCanvas();
 
-    img.src = oldImage;
+      const img = new Image();
 
-  });
+      img.onload = () => {
+        const ctx = item.canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+      };
+
+      img.src = oldImage;
+
+    });
+
+  }, 200);
 
 });
 
