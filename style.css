@@ -194,7 +194,7 @@ button {
 /* SCHEMA ALLARGATO VERSO IL BASSO A 180PX */
 .schema-container canvas {
   border: 1px dashed #777;
-  height: 180px; 
+  height: 200px; 
   cursor: crosshair;
   background: #fafafa;
 }
@@ -202,7 +202,7 @@ button {
 /* FIRME COMPATTE E PERFETTAMENTE ALLINEATE ALLA FINE DEL FOGLIO */
 .firma-container canvas {
   border: 1px dotted #000;
-  height: 55px;
+  height: 160px;
   cursor: crosshair;
   background: #fbfbfb;
 }
