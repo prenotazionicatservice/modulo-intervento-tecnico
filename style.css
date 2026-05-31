@@ -490,38 +490,28 @@ canvas {
 }
 
 /* TABLET E TELEFONI */
-@media screen and (max-width: 1024px) {
-
+@media screen and (max-width: 900px) {
   body {
-    padding: 0;
+    padding: 5px;
   }
 
   .page {
-
     width: 100%;
+    height: auto;
     min-height: auto;
-
     padding: 10px;
-  }
-
-  .top-row {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .left-title,
-  .ticket-box {
-    width: 100%;
   }
 
   .columns {
     flex-direction: column;
+    gap: 0;
   }
 
   .left-column,
   .right-column {
     width: 100%;
   }
+}
 
   .check-table td {
     font-size: 10px;
