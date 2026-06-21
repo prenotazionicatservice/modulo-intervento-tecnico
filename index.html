@@ -349,157 +349,109 @@ content="width=device-width, initial-scale=1">
 </div>
 
 <script>
-
 const canvases = [];
 
-  function formatDateToday() {
+function formatDateToday() {
   const oggi = new Date();
-
   const giorno = String(oggi.getDate()).padStart(2, '0');
   const mese = String(oggi.getMonth() + 1).padStart(2, '0');
   const anno = oggi.getFullYear();
-
   return `${giorno}/${mese}/${anno}`;
 }
 
 function formatTimeNow() {
   const now = new Date();
-
   const ore = String(now.getHours()).padStart(2, '0');
   const minuti = String(now.getMinutes()).padStart(2, '0');
-
   return `${ore}:${minuti}`;
 }
 
-  let lastX = 0;
-let lastY = 0;
-  
 function initCanvas(canvasId, targetHeight) {
-
   const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
-
   let drawing = false;
 
   function resizeCanvas() {
-
     const ratio = window.devicePixelRatio || 1;
-
     const width = canvas.parentElement.clientWidth - 2;
-
     canvas.style.width = width + 'px';
     canvas.style.height = targetHeight + 'px';
-
     canvas.width = width * ratio;
     canvas.height = targetHeight * ratio;
-
- ctx.setTransform(1, 0, 0, 1, 0, 0);
-ctx.scale(ratio, ratio);   
-
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(ratio, ratio);   
     ctx.lineWidth = 1.8;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.strokeStyle = '#000';
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
   }
 
   resizeCanvas();
 
   function getPosition(e) {
-
     const rect = canvas.getBoundingClientRect();
-
     if (e.touches && e.touches[0]) {
-
       return {
         x: e.touches[0].clientX - rect.left,
         y: e.touches[0].clientY - rect.top
       };
-
     }
-
     return {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top
     };
-
   }
 
-function startDrawing(e) {
-  drawing = true;
+  function startDrawing(e) {
+    drawing = true;
+    const pos = getPosition(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    e.preventDefault();
+  }
 
-  const pos = getPosition(e);
+  function draw(e) {
+    if (!drawing) return;
+    const pos = getPosition(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    e.preventDefault();
+  }
 
-  ctx.beginPath();
-  ctx.moveTo(pos.x, pos.y);
+  function stopDrawing() {
+    drawing = false;
+    ctx.closePath();
+  }
 
-  e.preventDefault();
-}
-
-function draw(e) {
-  if (!drawing) return;
-
-  const pos = getPosition(e);
-
-  const pressure = e.pressure && e.pressure > 0 ? e.pressure : 0.5;
-
-  ctx.lineWidth = 2.5 * pressure;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-
-  ctx.lineTo(pos.x, pos.y);
-  ctx.stroke();
-
-  e.preventDefault();
-}
-
-function stopDrawing() {
-  drawing = false;
-  ctx.closePath();
-}
-
-  // Pointer Events = PERFETTO per tablet/stylus/mouse
   canvas.addEventListener('pointerdown', startDrawing);
   canvas.addEventListener('pointermove', draw);
   canvas.addEventListener('pointerup', stopDrawing);
   canvas.addEventListener('pointerleave', stopDrawing);
 
-  // Blocca gesture strane
   canvas.style.touchAction = 'none';
   canvas.style.userSelect = 'none';
 
-  canvases.push({
-    canvas,
-    resizeCanvas
-  });
+  canvases.push({ canvas, resizeCanvas });
+}
+
+function clearCanvas(id) {
+  const canvas = document.getElementById(id);
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
 }
 
 function clearAllCanvases() {
   ['canvas-schema', 'canvas-firma-tecnico', 'canvas-firma-cliente'].forEach(id => {
-    const canvas = document.getElementById(id);
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    clearCanvas(id);
   });
-}
-  function clearCanvas(canvasId) {
-
-  const canvas = document.getElementById(canvasId);
-
-  const ctx = canvas.getContext('2d');
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 window.onload = function () {
-
-  // DATA AUTOMATICA (oggi)
   document.getElementById('data-intervento').value = formatDateToday();
-
-  // ORA USCITA = automatica (fine intervento → ora apertura modulo)
   document.getElementById('ora-uscita').value = formatTimeNow();
-
-  // ORA INGRESSO = vuota (la inserisci tu)
   document.getElementById('ora-ingresso').value = "";
 
   initCanvas('canvas-schema', 200);
@@ -507,120 +459,40 @@ window.onload = function () {
   initCanvas('canvas-firma-cliente', 160);
 };
 
-  let resizeTimeout;
-
-window.addEventListener('resize', () => {
-
-  clearTimeout(resizeTimeout);
-
-  resizeTimeout = setTimeout(() => {
-
-    canvases.forEach(item => {
-
-      const oldImage = item.canvas.toDataURL();
-
-      item.resizeCanvas();
-
-      const img = new Image();
-
-      img.onload = () => {
-        const ctx = item.canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-      };
-
-      img.src = oldImage;
-
-    });
-
-  }, 200);
-
-});
-
-    // Funzione di validazione del Nome e Cognome del cliente (DISATTIVATA)
-function validaNominativo() {
-  // Ritorna sempre vero per saltare il controllo del Nome e Cognome obbligatorio
-  return true; 
-
-  const campo = document.getElementById('cliente-nominativo').value.trim();
-  const parole = campo.split(/\s+/);
-  if (parole.length < 2 || parole[0] === "" || parole[1] === "") {
-    alert("Attenzione: Inserisci sia il COGNOME che il NOME del cliente prima di scaricare il PDF.");
-    return false;
-  }
-  return true;
-}
-
 async function downloadPDF() {
-  // Recupera nome cliente
-  const nominativo = document
-    .getElementById('cliente-nominativo')
-    .value
-    .trim()
-    .replace(/\s+/g, '_')
-    .replace(/[^a-zA-Z0-9_]/g, '');
+  const nominativoInput = document.getElementById('cliente-nominativo');
+  const nominativo = nominativoInput ? nominativoInput.value.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') : '';
 
-  // Data automatica
   const oggi = new Date();
-  const giorno = String(oggi.getDate()).padStart(2, '0');
-  const mese = String(oggi.getMonth() + 1).padStart(2, '0');
-  const anno = oggi.getFullYear();
-  const dataFormato = `${giorno}-${mese}-${anno}`;
-
-  // Nome finale PDF
-  const nomeFile = nominativo
-    ? `Rapporto_${nominativo}_${dataFormato}.pdf`
-    : `Rapporto_${dataFormato}.pdf`;
+  const dataFormato = `${String(oggi.getDate()).padStart(2, '0')}-${String(oggi.getMonth() + 1).padStart(2, '0')}-${oggi.getFullYear()}`;
+  const nomeFile = nominativo ? `Rapporto_${nominativo}_${dataFormato}.pdf` : `Rapporto_${dataFormato}.pdf`;
 
   const element = document.getElementById('modulo');
-
-  // Applica la classe pdf-mode prima di generare
   element.classList.add('pdf-mode');
 
   const opt = {
     margin: 0,
     filename: nomeFile,
     image: { type: 'jpeg', quality: 1 },
-    html2canvas: {
-      scale: 2,
-      useCORS: true
-    },
-    jsPDF: {
-      unit: 'mm',
-      format: 'a4',
-      orientation: 'portrait'
-    }
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   try {
-    // Genera il PDF usando la libreria locale
     const worker = html2pdf().set(opt).from(element);
     const pdfBlob = await worker.output('blob');
+    const file = new File([pdfBlob], nomeFile, { type: 'application/pdf' });
 
-    const file = new File(
-      [pdfBlob],
-      nomeFile,
-      { type: 'application/pdf' }
-    );
-
-    // Condivisione Smartphone
-    if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare({ files: [file] })
-    ) {
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({
         files: [file],
         title: 'Rapporto Tecnico',
         text: 'Invio rapporto tecnico'
       });
     } else {
-      // Download PC
       await worker.save();
     }
-
-    // Rimuove la classe dopo la generazione
     element.classList.remove('pdf-mode');
-
   } catch (err) {
     console.error(err);
     alert('Errore generazione PDF');
@@ -628,30 +500,11 @@ async function downloadPDF() {
   }
 }
 
-// Funzione per cancellare il singolo canvas
-function clearCanvas(id) {
-  const canvas = document.getElementById(id);
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-// Funzione per cancellare tutti i canvas insieme
-function clearAllCanvases() {
-  ['canvas-schema', 'canvas-firma-tecnico', 'canvas-firma-cliente'].forEach(id => {
-    const canvas = document.getElementById(id);
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-  });
-}
-
-// REGISTRAZIONE DEL SERVICE WORKER
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('Service Worker registrato!', reg))
-      .catch(err => console.error('Errore Service Worker:', err));
+      .then(reg => console.log('Service Worker registrato con successo!', reg))
+      .catch(err => console.error('Errore SW:', err));
   });
 }
 </script>
