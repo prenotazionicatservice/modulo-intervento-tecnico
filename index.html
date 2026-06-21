@@ -475,19 +475,21 @@ async function downloadPDF() {
     return;
   }
   
+  // 1. Applica la modalità PDF fluida
   element.classList.add('pdf-mode');
 
+  // 2. Converti i canvas in immagini reali
   const canvasIds = ['canvas-schema', 'canvas-firma-tecnico', 'canvas-firma-cliente'];
   const tempImages = [];
 
   canvasIds.forEach(id => {
     const canvas = document.getElementById(id);
-    if (canvas && canvas.style.display !== 'none') {
+    if (canvas) {
       try {
         const img = document.createElement('img');
         img.src = canvas.toDataURL('image/png');
         img.style.width = '100%';
-        img.style.height = canvas.offsetHeight + 'px';
+        img.style.height = (id === 'canvas-schema' ? '100px' : '50px'); // Altezze fisse nel PDF
         img.style.display = 'block';
         img.className = 'temp-pdf-img';
 
@@ -501,28 +503,32 @@ async function downloadPDF() {
     }
   });
 
-const opt = {
-    margin: [8, 8, 8, 8], // Margini corretti per la pagina A4 [top, left, bottom, right]
+  // 3. Opzioni di configurazione con pagebreak accurato
+  const opt = {
+    margin: [10, 10, 10, 10], 
     filename: nomeFile,
-    image: { type: 'jpeg', quality: 0.98 },
+    image: { type: 'jpeg', quality: 0.95 },
     html2canvas: { 
       scale: 2, 
       useCORS: true,
-      logging: false
+      logging: false,
+      letterRendering: true
     },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    // Aggiungi questa riga fondamentale per gestire il passaggio alla pagina 2:
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    pagebreak: { mode: ['css', 'legacy'] } // Sfrutta i comandi CSS inseriti nel foglio stile
   };
 
   try {
+    // Diamo un piccolissimo delay (100ms) al browser per digerire le immagini appena iniettate
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Genera e scarica il file
     await html2pdf().set(opt).from(element).save();
 
+    // Gestione eventuale condivisione nativa (Tablet/Smartphone)
     if (navigator.share) {
-      const worker = html2pdf().set(opt).from(element);
-      const pdfBlob = await worker.output('blob');
+      const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
       const file = new File([pdfBlob], nomeFile, { type: 'application/pdf' });
-
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
@@ -535,11 +541,17 @@ const opt = {
     console.error('ERRORE GENERAZIONE PDF:', err);
     alert('Errore durante la creazione del PDF.');
   } finally {
+    // 4. Ripristina lo stato iniziale dello schermo
     tempImages.forEach(item => {
       if (item.img) item.img.remove();
       if (item.canvas) item.canvas.style.display = 'block';
     });
     element.classList.remove('pdf-mode');
+    
+    // Forza il ricalcolo delle dimensioni dei canvas grafici
+    if (typeof canvases !== 'undefined') {
+      canvases.forEach(c => c.resizeCanvas());
+    }
   }
 }
 </script> 
