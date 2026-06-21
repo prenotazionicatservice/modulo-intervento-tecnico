@@ -455,7 +455,7 @@ window.onload = function () {
   initCanvas('canvas-firma-cliente', 160);
 };
 
-async function downloadPDF() {
+    async function downloadPDF() {
   const nominativoInput = document.getElementById('cliente-nominativo');
   const nominativo = nominativoInput ? nominativoInput.value.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') : '';
 
@@ -466,15 +466,45 @@ async function downloadPDF() {
   const element = document.getElementById('modulo');
   element.classList.add('pdf-mode');
 
+  // --- SOLUZIONE CANVAS: Convertiamo i canvas in immagini PNG temporanee ---
+  const canvasIds = ['canvas-schema', 'canvas-firma-tecnico', 'canvas-firma-cliente'];
+  const tempImages = [];
+
+  canvasIds.forEach(id => {
+    const canvas = document.getElementById(id);
+    if (canvas) {
+      // Crea un elemento immagine temporaneo
+      const img = document.createElement('img');
+      img.src = canvas.toDataURL('image/png');
+      img.style.width = '100%';
+      img.style.height = canvas.style.height;
+      img.style.display = 'block';
+      img.className = 'temp-pdf-img'; // Classe di controllo
+
+      // Nasconde il canvas originale e inserisce l'immagine appena prima di esso
+      canvas.style.display = 'none';
+      canvas.parentElement.insertBefore(img, canvas);
+
+      // Teniamo traccia per ripristinare dopo
+      tempImages.push({ canvas, img });
+    }
+  });
+
   const opt = {
-    margin: 0,
+    margin: [10, 10, 10, 10], // Un minimo di margine previene tagli sui bordi dell'A4
     filename: nomeFile,
-    image: { type: 'jpeg', quality: 1 },
-    html2canvas: { scale: 2, useCORS: true },
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { 
+      scale: 2, 
+      useCORS: true,
+      logging: false,
+      letterRendering: true
+    },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   try {
+    // Generiamo il PDF usando l'elemento che ora contiene le immagini reali al posto dei canvas
     const worker = html2pdf().set(opt).from(element);
     await worker.toPdf();
 
@@ -494,6 +524,19 @@ async function downloadPDF() {
     } else {
       await worker.save();
     }
+
+  } catch (err) {
+    console.error('ERRORE PDF:', err);
+    alert('ERRORE PDF:\n' + (err && err.message ? err.message : err));
+  } finally {
+    // --- RIPRISTINO: Rimuoviamo le immagini e mostriamo di nuovo i canvas originali ---
+    tempImages.forEach(item => {
+      item.img.remove();
+      item.canvas.style.display = 'block';
+    });
+    element.classList.remove('pdf-mode');
+  }
+}
 
     element.classList.remove('pdf-mode');
 
