@@ -440,11 +440,11 @@ canvas {
   width: 210mm !important;
   max-width: 210mm !important;
   height: 297mm !important;
-  max-height: 297mm !important; /* Forza il limite massimo assoluto */
-  padding: 4mm !important;      /* Margine interno ridotto per recuperare spazio */
+  max-height: 297mm !important; 
+  padding: 4mm !important;      
   box-sizing: border-box !important;
   background: #ffffff !important;
-  overflow: hidden !important;   /* Taglia qualsiasi millimetro in eccesso evitando la pagina 2 */
+  overflow: hidden !important;   
 }
 
 .pdf-mode .columns {
@@ -459,31 +459,30 @@ canvas {
   width: 50% !important;
 }
 
-/* COMPATTAZIONE RIGIDA DEGLI SPAZI NEL PDF */
+/* COMPATTAZIONE RIGIDA SOLO NEL PDF PER EVITARE SFORAMENTI */
 .pdf-mode .schema-container canvas, 
 .pdf-mode .temp-pdf-img[src*="canvas-schema"] {
-  height: 120px !important; /* Riduce drasticamente il box del disegno nel PDF */
+  height: 110px !important; 
 }
 
 .pdf-mode .firma-container canvas,
 .pdf-mode .temp-pdf-img[src*="canvas-firma"] {
-  height: 45px !important;  /* Riduce drasticamente l'altezza delle firme nel PDF */
+  height: 40px !important;  
 }
 
 .pdf-mode .big-notes {
-  height: 35px !important;  /* Rimpicciolisce il box delle note */
+  height: 35px !important;  
 }
 
 .pdf-mode .check-table td {
-  padding: 1.5px 3px !important; /* Stringe le righe della tabella della verifica */
+  padding: 1.5px 3px !important; 
 }
 
 .pdf-mode .privacy-box p {
-  font-size: 5.8px !important;  /* Riduce leggermente il testo della privacy */
+  font-size: 5.8px !important;  
   line-height: 1.05 !important;
 }
 
-/* Mantieni le tue vecchie regole per input e filigrana qui sotto */
 .pdf-mode input[type="text"],
 .pdf-mode input[type="time"] {
   background: transparent !important;
@@ -507,7 +506,6 @@ canvas {
   border: 1px solid #ccc !important;
   background: #fafafa !important;
 }
-
 
 /* ==========================================================================
    VERSIONE STAMPA STANDARD (Browser Ctrl+P) E RESPONSIVE MOBILE
@@ -561,31 +559,4 @@ canvas {
   :not(.pdf-mode) .privacy-box p {
     font-size: 8px;
   }
-
-  /* ==========================================================================
-   OTTIMIZZAZIONI DI CONTENIMENTO PER PAGINA UNICA
-   ========================================================================== */
-.pdf-mode .schema-container canvas, 
-.pdf-mode .temp-pdf-img[src*="canvas-schema"] {
-  height: 140px !important; /* Riduce il box del disegno nel PDF */
 }
-
-.pdf-mode .firma-container canvas,
-.pdf-mode .temp-pdf-img[src*="canvas-firma"] {
-  height: 45px !important;  /* Riduce lo spazio delle firme nel PDF */
-}
-
-.pdf-mode .big-notes {
-  height: 35px !important;  /* Compatta leggermente l'area delle note */
-}
-
-.pdf-mode .check-table td {
-  padding: 1.8px 3px !important; /* Rimpicciolisce leggermente il padding della tabella */
-}
-
-.pdf-mode .privacy-box p {
-  font-size: 5.8px !important; /* Ottimizza la leggibilità del testo legale */
-  line-height: 1.05 !important;
-}
-}
-
