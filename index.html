@@ -501,19 +501,23 @@ async function downloadPDF() {
     }
   });
 
-  const opt = {
-    margin: [5, 5, 5, 5], 
+    const opt = {
+    margin: [0, 0, 0, 0], // Azzeriamo i margini esterni per non rubare spazio al foglio
     filename: nomeFile,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
       scale: 2, 
       useCORS: true,
-      logging: false
+      logging: false,
+      scrollY: 0, // Evita che lo scroll della pagina sfalsi l'altezza del PDF
+      windowWidth: 794, // Forza la larghezza standard dei pixel per l'A4 a 96 DPI
+      windowHeight: 1123 // Forza l'altezza esatta dell'A4, tagliando i fogli extra vuoti
     },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all'] } // Forza l'algoritmo a evitare interruzioni di pagina selvagge
   };
 
-  try {
+ try {
     await html2pdf().set(opt).from(element).save();
 
     if (navigator.share) {
