@@ -504,18 +504,17 @@ async function downloadPDF() {
   });
 
   // 3. Opzioni di configurazione con pagebreak accurato
-  const opt = {
-    margin: [10, 10, 10, 10], 
+const opt = {
+    margin: 0, // Lascia la gestione del margine al padding CSS di .pdf-mode
     filename: nomeFile,
-    image: { type: 'jpeg', quality: 0.95 },
+    image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
       scale: 2, 
       useCORS: true,
       logging: false,
       letterRendering: true
     },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['css', 'legacy'] } // Sfrutta i comandi CSS inseriti nel foglio stile
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   try {
