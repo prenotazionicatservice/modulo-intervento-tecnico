@@ -462,13 +462,14 @@ window.onload = function () {
 };
 
 async function downloadPDF() {
+  // Preleviamo i dati esattamente come faceva il tuo codice originale
   const cognome = document.getElementById('cliente-cognome').value.trim() || 'Rapporto';
   const nome = document.getElementById('cliente-nome').value.trim() || 'Tecnico';
   const dataIntervento = document.getElementById('data-intervento').value || '00-00-0000';
   
-  // Converte la data da YYYY-MM-DD a DD-MM-YYYY per il nome del file
+  // Manteniamo la formattazione della data originale del tuo codice
   let dataFormattata = dataIntervento;
-  if(dataIntervento.includes('-')) {
+  if (dataIntervento.includes('-')) {
     const parti = dataIntervento.split('-');
     dataFormattata = `${parti[2]}-${parti[1]}-${parti[0]}`;
   }
@@ -476,7 +477,7 @@ async function downloadPDF() {
   const nomeFile = `${cognome}_${nome}_${dataFormattata}.pdf`;
   const element = document.getElementById('modulo');
 
-  // Applica la classe per ottimizzare il layout del PDF
+  // Attiva la modalità PDF
   element.classList.add('pdf-mode');
 
   const canvases = [
@@ -487,9 +488,9 @@ async function downloadPDF() {
 
   const tempImages = [];
 
-  // Converti i canvas in immagini temporanee bloccando le altezze per il PDF
+  // Questa è la parte corretta: converte i canvas in immagini riducendo l'altezza SOLO nel PDF
   canvases.forEach((canvas) => {
-    if (canvas && canvas.getContext) {
+    if (canvas) {
       const id = canvas.id;
       try {
         const img = document.createElement('img');
@@ -498,11 +499,11 @@ async function downloadPDF() {
         img.style.display = 'block';
         img.className = 'temp-pdf-img';
 
-        // FORZATURA ALTEZZA: Blocchiamo l'altezza delle immagini direttamente qui via JS per il PDF
+        // COMPATTAZIONE DELLE ALTEZZE: evitano la seconda pagina
         if (id === 'canvas-schema') {
-          img.style.height = '120px'; // Compatta il riquadro del disegno nel PDF
+          img.style.height = '120px'; // Riduce il disegno
         } else if (id.includes('firma')) {
-          img.style.height = '45px';  // Compatta le firme nel PDF
+          img.style.height = '45px';  // Riduce le due firme
         } else {
           img.style.height = canvas.offsetHeight + 'px';
         }
@@ -517,27 +518,25 @@ async function downloadPDF() {
     }
   });
 
-  // OPZIONI DI GENERAZIONE RIGIDE PER EVITARE SFORAMENTI E PAGINE EXTRA
+  // Opzioni originali con i margini azzerati per ottimizzare lo spazio dell'A4
   const opt = {
-    margin: [0, 0, 0, 0], // Margini esterni azzerati per sfruttare tutto l'A4
+    margin: [0, 0, 0, 0], 
     filename: nomeFile,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
       scale: 2, 
       useCORS: true,
       logging: false,
-      scrollY: 0,
-      windowWidth: 794,    // Dimensione larghezza standard A4
-      windowHeight: 1123   // Dimensione altezza standard A4 (blocca la creazione di pagine vuote)
+      scrollY: 0
     },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   try {
-    // Genera e scarica il file PDF direttamente
+    // Genera il PDF
     await html2pdf().set(opt).from(element).save();
 
-    // Gestione della condivisione nativa (WhatsApp, Email, ecc.) se supportata
+    // Condivisione nativa (WhatsApp/Email) del tuo codice originale
     if (navigator.share) {
       const worker = html2pdf().set(opt).from(element);
       const pdfBlob = await worker.output('blob');
@@ -553,12 +552,11 @@ async function downloadPDF() {
     }
   } catch (err) {
     console.error('ERRORE GENERAZIONE PDF:', err);
-    alert('Si è verificato un errore durante la generazione del PDF. Riprova.');
   } finally {
-    // Ripristina lo stato originale dei canvas sullo schermo per poter continuare a usare l'app
+    // Ripristina i canvas visibili sullo schermo dello smartphone/tablet
     tempImages.forEach(({ canvas, img }) => {
-      canvas.style.display = 'block';
-      if (img.parentNode) {
+      if (canvas) canvas.style.display = 'block';
+      if (img && img.parentNode) {
         img.parentNode.removeChild(img);
       }
     });
