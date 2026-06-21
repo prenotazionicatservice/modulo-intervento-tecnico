@@ -344,7 +344,7 @@
 
 </div>
 
-<script>
+  <script>
 const canvases = [];
 
 function formatDateToday() {
@@ -455,7 +455,6 @@ window.onload = function () {
   initCanvas('canvas-firma-cliente', 160);
 };
 
-// FUNZIONE DOWNLOAD PDF COMPLETAMENTE RIPRISTINATA E CORRETTA
 async function downloadPDF() {
   const nominativoInput = document.getElementById('cliente-nominativo');
   const nominativo = nominativoInput ? nominativoInput.value.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') : '';
@@ -474,45 +473,38 @@ async function downloadPDF() {
     html2canvas: { scale: 2, useCORS: true },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
-try {
-  const worker = html2pdf().set(opt).from(element);
 
-  await worker.toPdf();
+  try {
+    const worker = html2pdf().set(opt).from(element);
+    await worker.toPdf();
 
-  if (navigator.share) {
-    const pdfBlob = await worker.output('blob');
-    const file = new File([pdfBlob], nomeFile, { type: 'application/pdf' });
+    if (navigator.share) {
+      const pdfBlob = await worker.output('blob');
+      const file = new File([pdfBlob], nomeFile, { type: 'application/pdf' });
 
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({
-        files: [file],
-        title: 'Rapporto Tecnico',
-        text: 'Invio rapporto tecnico'
-      });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Rapporto Tecnico',
+          text: 'Invio rapporto tecnico'
+        });
+      } else {
+        await worker.save();
+      }
     } else {
       await worker.save();
     }
-  } else {
-    await worker.save();
+
+    element.classList.remove('pdf-mode');
+
+  } catch (err) {
+    console.error('ERRORE PDF:', err);
+    alert('ERRORE PDF:\n' + (err && err.message ? err.message : err));
+    element.classList.remove('pdf-mode');
   }
-
-  element.classList.remove('pdf-mode');
-
-} catch (err) {
-  console.error('ERRORE PDF:', err);
-
-  alert(
-    'ERRORE PDF:\n' +
-    (err && err.message ? err.message : err)
-  );
-
-  element.classList.remove('pdf-mode');
 }
 
-}
-
-  <script src="./html2pdf.bundle.min.js"></script>
-
+// Registrazione corretta del Service Worker per la PWA offline
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
@@ -524,3 +516,4 @@ if ('serviceWorker' in navigator) {
 
 </body>
 </html>
+
