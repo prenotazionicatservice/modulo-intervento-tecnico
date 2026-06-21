@@ -433,18 +433,18 @@ canvas {
   z-index: 1;
 }
 
-/* ==========================================================================
-   GESTIONE SPECIFICA PER GENERAZIONE PDF (Attivata da JS tramite .pdf-mode)
-   ========================================================================== */
+/* Sostituisci la vecchia regola con questa */
 .pdf-mode {
   width: 210mm !important;
   max-width: 210mm !important;
   min-height: 297mm !important;
   height: 297mm !important;
-  padding: 10mm !important;
+  padding: 5mm !important; /* Ridotto da 10mm a 5mm per recuperare spazio */
   box-sizing: border-box !important;
   background: #ffffff !important;
+  overflow: hidden !important; /* Impedisce tassativamente la creazione di nuove pagine */
 }
+
 
 .pdf-mode .columns {
   display: flex !important;
@@ -534,4 +534,31 @@ canvas {
   :not(.pdf-mode) .privacy-box p {
     font-size: 8px;
   }
+
+  /* ==========================================================================
+   OTTIMIZZAZIONI DI CONTENIMENTO PER PAGINA UNICA
+   ========================================================================== */
+.pdf-mode .schema-container canvas, 
+.pdf-mode .temp-pdf-img[src*="canvas-schema"] {
+  height: 140px !important; /* Riduce il box del disegno nel PDF */
 }
+
+.pdf-mode .firma-container canvas,
+.pdf-mode .temp-pdf-img[src*="canvas-firma"] {
+  height: 45px !important;  /* Riduce lo spazio delle firme nel PDF */
+}
+
+.pdf-mode .big-notes {
+  height: 35px !important;  /* Compatta leggermente l'area delle note */
+}
+
+.pdf-mode .check-table td {
+  padding: 1.8px 3px !important; /* Rimpicciolisce leggermente il padding della tabella */
+}
+
+.pdf-mode .privacy-box p {
+  font-size: 5.8px !important; /* Ottimizza la leggibilità del testo legale */
+  line-height: 1.05 !important;
+}
+}
+
