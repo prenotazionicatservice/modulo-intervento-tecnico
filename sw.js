@@ -1,4 +1,4 @@
-const CACHE_NAME = 'interventi-v60';
+const CACHE_NAME = 'interventi-v61';
 
 const ASSETS = [
   './',
