@@ -462,12 +462,10 @@ window.onload = function () {
 };
 
 async function downloadPDF() {
-  // Preleviamo i dati esattamente come faceva il tuo codice originale
   const cognome = document.getElementById('cliente-cognome').value.trim() || 'Rapporto';
   const nome = document.getElementById('cliente-nome').value.trim() || 'Tecnico';
   const dataIntervento = document.getElementById('data-intervento').value || '00-00-0000';
   
-  // Manteniamo la formattazione della data originale del tuo codice
   let dataFormattata = dataIntervento;
   if (dataIntervento.includes('-')) {
     const parti = dataIntervento.split('-');
@@ -477,7 +475,6 @@ async function downloadPDF() {
   const nomeFile = `${cognome}_${nome}_${dataFormattata}.pdf`;
   const element = document.getElementById('modulo');
 
-  // Attiva la modalità PDF
   element.classList.add('pdf-mode');
 
   const canvases = [
@@ -488,7 +485,6 @@ async function downloadPDF() {
 
   const tempImages = [];
 
-  // Questa è la parte corretta: converte i canvas in immagini riducendo l'altezza SOLO nel PDF
   canvases.forEach((canvas) => {
     if (canvas) {
       const id = canvas.id;
@@ -501,9 +497,9 @@ async function downloadPDF() {
 
         // COMPATTAZIONE DELLE ALTEZZE: evitano la seconda pagina
         if (id === 'canvas-schema') {
-          img.style.height = '120px'; // Riduce il disegno
+          img.style.height = '110px'; 
         } else if (id.includes('firma')) {
-          img.style.height = '45px';  // Riduce le due firme
+          img.style.height = '40px';  
         } else {
           img.style.height = canvas.offsetHeight + 'px';
         }
@@ -518,25 +514,22 @@ async function downloadPDF() {
     }
   });
 
-  // Opzioni originali con i margini azzerati per ottimizzare lo spazio dell'A4
+  // Manteniamo le opzioni con margini minimi per non far sbordare nulla
   const opt = {
-    margin: [0, 0, 0, 0], 
+    margin: [2, 2, 2, 2], 
     filename: nomeFile,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
       scale: 2, 
       useCORS: true,
-      logging: false,
-      scrollY: 0
+      logging: false
     },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   try {
-    // Genera il PDF
     await html2pdf().set(opt).from(element).save();
 
-    // Condivisione nativa (WhatsApp/Email) del tuo codice originale
     if (navigator.share) {
       const worker = html2pdf().set(opt).from(element);
       const pdfBlob = await worker.output('blob');
@@ -553,7 +546,6 @@ async function downloadPDF() {
   } catch (err) {
     console.error('ERRORE GENERAZIONE PDF:', err);
   } finally {
-    // Ripristina i canvas visibili sullo schermo dello smartphone/tablet
     tempImages.forEach(({ canvas, img }) => {
       if (canvas) canvas.style.display = 'block';
       if (img && img.parentNode) {
