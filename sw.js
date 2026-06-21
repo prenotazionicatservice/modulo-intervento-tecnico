@@ -1,20 +1,21 @@
-const CACHE_NAME = 'interventi-v49';
+const CACHE_NAME = 'interventi-v60';
 
 const ASSETS = [
-  'index.html',
-  'style.css',
-  'logo.PNG',
-  'Icon-192.png',
-  'Icon-512.png',
-  'icon-180.png',
-  'html2pdf.bundle.min.js', // ORA LA VIRGOLA È CORRETTA
+  './',
+  './index.html',
+  './style.css',
+  './logo.PNG',
+  './Icon-192.png',
+  './Icon-512.png',
+  './icon-180.png',
+  './html2pdf.bundle.min.js'
 ];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS);
-    })
+    }).then(() => self.skipWaiting())
   );
 });
 
@@ -28,26 +29,25 @@ self.addEventListener('activate', (e) => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    fetch(e.request)
-      .then((response) => {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(e.request, clone);
-        });
-        return response;
-      })
-      .catch(() => caches.match(e.request))
+    caches.match(e.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(e.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      });
+    })
   );
-});
-
-self.addEventListener('message', (event) => {
-  if (event.data === 'skipWaiting') {
-    self.skipWaiting();
-  }
 });
