@@ -1,4 +1,4 @@
-const CACHE_NAME = 'interventi-v70';
+const CACHE_NAME = 'interventi-v71';
 
 const ASSETS = [
   './',
@@ -8,7 +8,7 @@ const ASSETS = [
   './Icon-192.png',
   './Icon-512.png',
   './icon-180.png',
-  './html2pdf.bundle.min.js'
+  './html2pdf.bundle.min.js',
 ];
 
 self.addEventListener('install', (e) => {
