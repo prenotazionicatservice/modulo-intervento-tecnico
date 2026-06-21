@@ -1,4 +1,4 @@
-const CACHE_NAME = 'interventi-v31'; // Incrementato la versione per forzare l'aggiornamento
+const CACHE_NAME = 'interventi-v32'; // Incrementato la versione per forzare l'aggiornamento
 
 const ASSETS = [
   'index.html',
