@@ -434,17 +434,17 @@ canvas {
 }
 
 /* ==========================================================================
-   GESTIONE SPECIFICA PDF (Nessun intralcio a JS, forza le immagini a rimpicciolirsi)
+   GESTIONE SPECIFICA PDF CORRETTA (Fluida su più pagine)
    ========================================================================== */
 .pdf-mode {
   width: 210mm !important;
   max-width: 210mm !important;
-  height: 297mm !important;
-  max-height: 297mm !important; 
-  padding: 4mm !important;      
+  height: auto !important;         /* Lascia che l'altezza si adatti al contenuto */
+  max-height: none !important;     /* Rimuove il blocco del limite di altezza */
+  padding: 8mm !important;      
   box-sizing: border-box !important;
   background: #ffffff !important;
-  overflow: hidden !important;   
+  overflow: visible !important;    /* Mostra il testo per permettere il cambio pagina */
 }
 
 .pdf-mode .columns {
@@ -459,15 +459,16 @@ canvas {
   width: 50% !important;
 }
 
-/* Interviene sulle immagini create da JS forzandone l'altezza massima nel PDF */
-.pdf-mode .temp-pdf-img {
-  max-height: 40px !important; 
+/* Rimpicciolisce le firme nel PDF per evitare che occupino troppo spazio */
+.pdf-mode .firma-container .temp-pdf-img {
+  max-height: 45px !important; 
   object-fit: contain !important;
 }
 
-/* Il disegno dello schema viene tenuto leggermente più grande ma contenuto */
+/* Contiene lo schema di installazione nel PDF */
 .pdf-mode .schema-container .temp-pdf-img {
-  max-height: 110px !important;
+  max-height: 90px !important;
+  object-fit: contain !important;
 }
 
 .pdf-mode .big-notes {
