@@ -499,8 +499,13 @@ try {
   element.classList.remove('pdf-mode');
 
 } catch (err) {
-  console.error(err);
-  alert('Errore generazione PDF');
+  console.error('ERRORE PDF:', err);
+
+  alert(
+    'ERRORE PDF:\n' +
+    (err && err.message ? err.message : err)
+  );
+
   element.classList.remove('pdf-mode');
 }
 
