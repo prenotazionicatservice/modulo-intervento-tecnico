@@ -439,36 +439,40 @@ canvas {
 .pdf-mode {
   width: 210mm !important;
   max-width: 210mm !important;
-  height: auto !important;         /* Lascia che l'altezza si adatti al contenuto */
-  max-height: none !important;     /* Rimuove il blocco del limite di altezza */
-  padding: 8mm !important;      
+  height: auto !important;
+  max-height: none !important;
+  padding: 10mm !important;      
   box-sizing: border-box !important;
   background: #ffffff !important;
-  overflow: visible !important;    /* Mostra il testo per permettere il cambio pagina */
+  overflow: visible !important;   
 }
 
+/* FORZA LE COLONNE IN VERTICALE NEL PDF PER PERMETTERE IL CAMBIO PAGINA */
 .pdf-mode .columns {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 10px !important;
+  display: block !important; /* Rimuove il flexbox che blocca l'altezza */
 }
 
 .pdf-mode .left-column,
 .pdf-mode .right-column {
-  flex: 1 !important;
-  width: 50% !important;
+  display: block !important;
+  width: 100% !important; /* Prende tutto il calibro dell'A4 */
+  float: none !important;
 }
 
-/* Rimpicciolisce le firme nel PDF per evitare che occupino troppo spazio */
-.pdf-mode .firma-container .temp-pdf-img {
-  max-height: 45px !important; 
+/* Evita che l'informativa sulla privacy si spezzi a metà in modo orribile */
+.pdf-mode .privacy-box {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  margin-top: 15px !important;
+}
+
+/* Ridimensionamento icone e immagini salvate */
+.pdf-mode .temp-pdf-img {
+  max-height: 50px !important; 
   object-fit: contain !important;
 }
-
-/* Contiene lo schema di installazione nel PDF */
 .pdf-mode .schema-container .temp-pdf-img {
-  max-height: 90px !important;
-  object-fit: contain !important;
+  max-height: 100px !important;
 }
 
 .pdf-mode .big-notes {
