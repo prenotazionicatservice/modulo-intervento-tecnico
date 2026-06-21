@@ -344,7 +344,8 @@
 
 </div>
 
-  <script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
 const canvases = [];
 
 function formatDateToday() {
@@ -384,6 +385,7 @@ function initCanvas(canvasId, targetHeight) {
   }
 
   resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
 
   function getPosition(e) {
     const rect = canvas.getBoundingClientRect();
@@ -446,16 +448,20 @@ function clearAllCanvases() {
 }
 
 window.onload = function () {
-  document.getElementById('data-intervento').value = formatDateToday();
-  document.getElementById('ora-uscita').value = formatTimeNow();
-  document.getElementById('ora-ingresso').value = "";
+  const dataField = document.getElementById('data-intervento');
+  const oraUscitaField = document.getElementById('ora-uscita');
+  const oraIngressoField = document.getElementById('ora-ingresso');
+
+  if(dataField) dataField.value = formatDateToday();
+  if(oraUscitaField) oraUscitaField.value = formatTimeNow();
+  if(oraIngressoField) oraIngressoField.value = "";
 
   initCanvas('canvas-schema', 200);
   initCanvas('canvas-firma-tecnico', 160);
   initCanvas('canvas-firma-cliente', 160);
 };
 
-    async function downloadPDF() {
+async function downloadPDF() {
   const nominativoInput = document.getElementById('cliente-nominativo');
   const nominativo = nominativoInput ? nominativoInput.value.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') : '';
 
@@ -464,51 +470,54 @@ window.onload = function () {
   const nomeFile = nominativo ? `Rapporto_${nominativo}_${dataFormato}.pdf` : `Rapporto_${dataFormato}.pdf`;
 
   const element = document.getElementById('modulo');
+  if (!element) {
+    alert("Errore: Elemento '#modulo' non trovato nel file HTML!");
+    return;
+  }
+  
   element.classList.add('pdf-mode');
 
-  // --- SOLUZIONE CANVAS: Convertiamo i canvas in immagini PNG temporanee ---
   const canvasIds = ['canvas-schema', 'canvas-firma-tecnico', 'canvas-firma-cliente'];
   const tempImages = [];
 
   canvasIds.forEach(id => {
     const canvas = document.getElementById(id);
-    if (canvas) {
-      // Crea un elemento immagine temporaneo
-      const img = document.createElement('img');
-      img.src = canvas.toDataURL('image/png');
-      img.style.width = '100%';
-      img.style.height = canvas.style.height;
-      img.style.display = 'block';
-      img.className = 'temp-pdf-img'; // Classe di controllo
+    if (canvas && canvas.style.display !== 'none') {
+      try {
+        const img = document.createElement('img');
+        img.src = canvas.toDataURL('image/png');
+        img.style.width = '100%';
+        img.style.height = canvas.offsetHeight + 'px';
+        img.style.display = 'block';
+        img.className = 'temp-pdf-img';
 
-      // Nasconde il canvas originale e inserisce l'immagine appena prima di esso
-      canvas.style.display = 'none';
-      canvas.parentElement.insertBefore(img, canvas);
+        canvas.style.display = 'none';
+        canvas.parentElement.insertBefore(img, canvas);
 
-      // Teniamo traccia per ripristinare dopo
-      tempImages.push({ canvas, img });
+        tempImages.push({ canvas, img });
+      } catch (err) {
+        console.warn("Errore conversione canvas:", id, err);
+      }
     }
   });
 
   const opt = {
-    margin: [10, 10, 10, 10], // Un minimo di margine previene tagli sui bordi dell'A4
+    margin: [5, 5, 5, 5], 
     filename: nomeFile,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
       scale: 2, 
       useCORS: true,
-      logging: false,
-      letterRendering: true
+      logging: false
     },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   try {
-    // Generiamo il PDF usando l'elemento che ora contiene le immagini reali al posto dei canvas
-    const worker = html2pdf().set(opt).from(element);
-    await worker.toPdf();
+    await html2pdf().set(opt).from(element).save();
 
     if (navigator.share) {
+      const worker = html2pdf().set(opt).from(element);
       const pdfBlob = await worker.output('blob');
       const file = new File([pdfBlob], nomeFile, { type: 'application/pdf' });
 
@@ -518,45 +527,20 @@ window.onload = function () {
           title: 'Rapporto Tecnico',
           text: 'Invio rapporto tecnico'
         });
-      } else {
-        await worker.save();
       }
-    } else {
-      await worker.save();
     }
-
   } catch (err) {
-    console.error('ERRORE PDF:', err);
-    alert('ERRORE PDF:\n' + (err && err.message ? err.message : err));
+    console.error('ERRORE GENERAZIONE PDF:', err);
+    alert('Errore durante la creazione del PDF.');
   } finally {
-    // --- RIPRISTINO: Rimuoviamo le immagini e mostriamo di nuovo i canvas originali ---
     tempImages.forEach(item => {
-      item.img.remove();
-      item.canvas.style.display = 'block';
+      if (item.img) item.img.remove();
+      if (item.canvas) item.canvas.style.display = 'block';
     });
     element.classList.remove('pdf-mode');
   }
 }
-
-    element.classList.remove('pdf-mode');
-
-  } catch (err) {
-    console.error('ERRORE PDF:', err);
-    alert('ERRORE PDF:\n' + (err && err.message ? err.message : err));
-    element.classList.remove('pdf-mode');
-  }
-}
-
-// Registrazione corretta del Service Worker per la PWA offline
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('Service Worker registrato con successo!', reg))
-      .catch(err => console.error('Errore SW:', err));
-  });
-}
-</script>
-
+</script> 
 </body>
 </html>
 
