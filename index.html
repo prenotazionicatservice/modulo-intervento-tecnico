@@ -564,11 +564,9 @@ async function downloadPDF() {
 
   // Data automatica
   const oggi = new Date();
-
   const giorno = String(oggi.getDate()).padStart(2, '0');
   const mese = String(oggi.getMonth() + 1).padStart(2, '0');
   const anno = oggi.getFullYear();
-
   const dataFormato = `${giorno}-${mese}-${anno}`;
 
   // Nome finale PDF
@@ -578,24 +576,28 @@ async function downloadPDF() {
 
   const element = document.getElementById('modulo');
 
+  // CONFIGURAZIONE CORRETTA PER EVITARE IL FOGLIO UNICO COSTRRETTO
   const opt = {
-    margin: 0,
+    margin: [10, 10, 10, 10], // Margini corretti in mm (Sopra, Sinistra, Sotto, Destra)
     filename: nomeFile,
-    image: { type: 'jpeg', quality: 1 },
+    image: { type: 'jpeg', quality: 0.98 },
     html2canvas: {
-      scale: 2,
-      useCORS: true
+      scale: 2,         // Mantiene l'alta definizione senza sgranare
+      useCORS: true,
+      scrollY: 0        // Evita tagli se la pagina è scrollata
     },
     jsPDF: {
       unit: 'mm',
       format: 'a4',
-      orientation: 'portrait'
-    }
+      orientation: 'portrait',
+      compress: true
+    },
+    // QUESTA ISTRUZIONE GESTISCE LE INTERRUZIONI AUTOMATICHE SU PIÙ PAGINE
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
 
   try {
-
-    // Genera PDF
+    // Genera PDF rispettando le dimensioni reali e dividendo su più fogli A4 se necessario
     const worker = html2pdf().set(opt).from(element);
 
     // Blob PDF
@@ -614,14 +616,22 @@ async function downloadPDF() {
       navigator.canShare &&
       navigator.canShare({ files: [file] })
     ) {
-
       await navigator.share({
         files: [file],
-        title: 'Rapporto Tecnico',
+        title: 'Rapporto Técnico',
         text: 'Invio rapporto tecnico'
       });
-
     } else {
+      // Download PC nativo su più pagine
+      await worker.save();
+    }
+
+  } catch (err) {
+    console.error(err);
+    // Fallback sicurezza
+    html2pdf().set(opt).from(element).save();
+  }
+}
 
       // Download PC
       await worker.save();
