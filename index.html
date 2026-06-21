@@ -19,7 +19,7 @@ content="width=device-width, initial-scale=1">
    <script src="html2pdf.bundle.min.js"></script>
   
  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+ 
 </head>
 <body>
 
@@ -551,10 +551,6 @@ function validaNominativo() {
 }
 
 async function downloadPDF() {
-
-  // Controllo nominativo
-  if (!validaNominativo()) return;
-
   // Recupera nome cliente
   const nominativo = document
     .getElementById('cliente-nominativo')
@@ -577,41 +573,36 @@ async function downloadPDF() {
 
   const element = document.getElementById('modulo');
 
-  // CONFIGURAZIONE CORRETTA PER EVITARE IL FOGLIO UNICO COSTRRETTO
+  // Applica la classe pdf-mode prima di generare
+  element.classList.add('pdf-mode');
+
   const opt = {
-    margin: [10, 10, 10, 10], // Margini corretti in mm (Sopra, Sinistra, Sotto, Destra)
+    margin: 0,
     filename: nomeFile,
-    image: { type: 'jpeg', quality: 0.98 },
+    image: { type: 'jpeg', quality: 1 },
     html2canvas: {
-      scale: 2,         // Mantiene l'alta definizione senza sgranare
-      useCORS: true,
-      scrollY: 0        // Evita tagli se la pagina è scrollata
+      scale: 2,
+      useCORS: true
     },
     jsPDF: {
       unit: 'mm',
       format: 'a4',
-      orientation: 'portrait',
-      compress: true
-    },
-    // QUESTA ISTRUZIONE GESTISCE LE INTERRUZIONI AUTOMATICHE SU PIÙ PAGINE
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      orientation: 'portrait'
+    }
   };
 
   try {
-    // Genera PDF rispettando le dimensioni reali e dividendo su più fogli A4 se necessario
+    // Genera il PDF usando la libreria locale
     const worker = html2pdf().set(opt).from(element);
-
-    // Blob PDF
     const pdfBlob = await worker.output('blob');
 
-    // File finale con nome dinamico
     const file = new File(
       [pdfBlob],
       nomeFile,
       { type: 'application/pdf' }
     );
 
-    // Condivisione Smartphone (WhatsApp, Telegram, Mail ecc.)
+    // Condivisione Smartphone
     if (
       navigator.share &&
       navigator.canShare &&
@@ -619,45 +610,48 @@ async function downloadPDF() {
     ) {
       await navigator.share({
         files: [file],
-        title: 'Rapporto Técnico',
+        title: 'Rapporto Tecnico',
         text: 'Invio rapporto tecnico'
       });
     } else {
-      // Download PC nativo su più pagine
-      await worker.save();
-    }
-
-  } catch (err) {
-    console.error(err);
-    // Fallback sicurezza
-    html2pdf().set(opt).from(element).save();
-  }
-}
-
       // Download PC
       await worker.save();
-
     }
 
+    // Rimuove la classe dopo la generazione
+    element.classList.remove('pdf-mode');
+
   } catch (err) {
-
     console.error(err);
-
-    // Fallback sicurezza
-    html2pdf()
-      .set(opt)
-      .from(element)
-      .save();
-
+    alert('Errore generazione PDF');
+    element.classList.remove('pdf-mode');
   }
 }
 
-// REGISTRAZIONE DEL SERVICE WORKER PER ATTIVARE LA PWA
+// Funzione per cancellare il singolo canvas
+function clearCanvas(id) {
+  const canvas = document.getElementById(id);
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// Funzione per cancellare tutti i canvas insieme
+function clearAllCanvases() {
+  ['canvas-schema', 'canvas-firma-tecnico', 'canvas-firma-cliente'].forEach(id => {
+    const canvas = document.getElementById(id);
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  });
+}
+
+// REGISTRAZIONE DEL SERVICE WORKER
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('Service Worker registrato con successo!', reg))
-      .catch(err => console.error('Errore nella registrazione del Service Worker:', err));
+      .then(reg => console.log('Service Worker registrato!', reg))
+      .catch(err => console.error('Errore Service Worker:', err));
   });
 }
 </script>
