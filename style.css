@@ -434,7 +434,7 @@ canvas {
 }
 
 /* ==========================================================================
-   GESTIONE SPECIFICA PER GENERAZIONE PDF (Attivata da JS tramite .pdf-mode)
+   GESTIONE SPECIFICA PDF (Nessun intralcio a JS, forza le immagini a rimpicciolirsi)
    ========================================================================== */
 .pdf-mode {
   width: 210mm !important;
@@ -459,15 +459,15 @@ canvas {
   width: 50% !important;
 }
 
-/* COMPATTAZIONE RIGIDA SOLO NEL PDF PER EVITARE SFORAMENTI */
-.pdf-mode .schema-container canvas, 
-.pdf-mode .temp-pdf-img[src*="canvas-schema"] {
-  height: 110px !important; 
+/* Interviene sulle immagini create da JS forzandone l'altezza massima nel PDF */
+.pdf-mode .temp-pdf-img {
+  max-height: 40px !important; 
+  object-fit: contain !important;
 }
 
-.pdf-mode .firma-container canvas,
-.pdf-mode .temp-pdf-img[src*="canvas-firma"] {
-  height: 40px !important;  
+/* Il disegno dello schema viene tenuto leggermente più grande ma contenuto */
+.pdf-mode .schema-container .temp-pdf-img {
+  max-height: 110px !important;
 }
 
 .pdf-mode .big-notes {
@@ -508,7 +508,7 @@ canvas {
 }
 
 /* ==========================================================================
-   VERSIONE STAMPA STANDARD (Browser Ctrl+P) E RESPONSIVE MOBILE
+   VERSIONE STAMPA STANDARD E RESPONSIVE MOBILE
    ========================================================================== */
 @media print {
   body {
@@ -529,7 +529,6 @@ canvas {
   }
 }
 
-/* TABLET E TELEFONI (Solo su Schermo, NON intacca il PDF) */
 @media screen and (max-width: 900px) {
   body {
     padding: 5px;
