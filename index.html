@@ -474,13 +474,16 @@ async function downloadPDF() {
     html2canvas: { scale: 2, useCORS: true },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
+try {
+  const worker = html2pdf().set(opt).from(element);
 
-  try {
-    const worker = html2pdf().set(opt).from(element);
+  await worker.toPdf();
+
+  if (navigator.share) {
     const pdfBlob = await worker.output('blob');
     const file = new File([pdfBlob], nomeFile, { type: 'application/pdf' });
 
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({
         files: [file],
         title: 'Rapporto Tecnico',
@@ -489,12 +492,18 @@ async function downloadPDF() {
     } else {
       await worker.save();
     }
-    element.classList.remove('pdf-mode');
-  } catch (err) {
-    console.error(err);
-    alert('Errore generazione PDF');
-    element.classList.remove('pdf-mode');
+  } else {
+    await worker.save();
   }
+
+  element.classList.remove('pdf-mode');
+
+} catch (err) {
+  console.error(err);
+  alert('Errore generazione PDF');
+  element.classList.remove('pdf-mode');
+}
+
 }
 
 if ('serviceWorker' in navigator) {
