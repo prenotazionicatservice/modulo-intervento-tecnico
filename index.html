@@ -459,6 +459,7 @@ window.onload = function () {
   initCanvas('canvas-firma-cliente', 160);
 };
 
+// FUNZIONE DOWNLOAD PDF COMPLETAMENTE RIPRISTINATA E CORRETTA
 async function downloadPDF() {
   const nominativoInput = document.getElementById('cliente-nominativo');
   const nominativo = nominativoInput ? nominativoInput.value.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') : '';
