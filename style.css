@@ -434,45 +434,74 @@ canvas {
 }
 
 /* ==========================================================================
-   GESTIONE SPECIFICA PDF CORRETTA (Fluida su più pagine)
+   RIPRISTINO E OTTIMIZZAZIONE STRUTTURA PDF (DUE COLONNE AFFIANCATE)
    ========================================================================== */
 .pdf-mode {
   width: 210mm !important;
   max-width: 210mm !important;
-  height: auto !important;
-  max-height: none !important;
-  padding: 10mm !important;      
+  height: 297mm !important;     /* Forza l'altezza esatta di un foglio A4 */
+  max-height: 297mm !important;
+  padding: 5mm 7mm !important;  /* Margini interni protettivi */
   box-sizing: border-box !important;
   background: #ffffff !important;
-  overflow: visible !important;   
+  overflow: hidden !important;   /* Evita doppie pagine spurie */
+  font-size: 10px !important;    /* Rimpicciolisce leggermente il testo generale */
 }
 
-/* FORZA LE COLONNE IN VERTICALE NEL PDF PER PERMETTERE IL CAMBIO PAGINA */
+/* Mantiene il layout originale a due colonne affiancate */
 .pdf-mode .columns {
-  display: block !important; /* Rimuove il flexbox che blocca l'altezza */
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px !important;
+  align-items: stretch !important;
 }
 
-.pdf-mode .left-column,
+.pdf-mode .left-column {
+  width: 48% !important;
+  flex: none !important;
+}
+
 .pdf-mode .right-column {
-  display: block !important;
-  width: 100% !important; /* Prende tutto il calibro dell'A4 */
-  float: none !important;
+  width: 52% !important;
+  flex: none !important;
 }
 
-/* Evita che l'informativa sulla privacy si spezzi a metà in modo orribile */
+/* Compila e stringi le tabelle di controllo per recuperare altezza */
+.pdf-mode .check-table th,
+.pdf-mode .check-table td {
+  padding: 2px 4px !important;
+  font-size: 8.5px !important;
+  line-height: 1.1 !important;
+}
+
+/* Rimpicciolisce drasticamente l'informativa privacy per non farla tagliare */
 .pdf-mode .privacy-box {
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-  margin-top: 15px !important;
+  margin-top: 5px !important;
+  padding: 4px !important;
+  border: 1px solid #ccc !important;
 }
 
-/* Ridimensionamento icone e immagini salvate */
-.pdf-mode .temp-pdf-img {
-  max-height: 50px !important; 
-  object-fit: contain !important;
+.pdf-mode .privacy-box p {
+  font-size: 5.5px !important;  /* Testo micro ma leggibile in stampa */
+  line-height: 1.1 !important;
+  margin-bottom: 2px !important;
 }
+
+/* Ottimizzazione spazi delle note e osservazioni */
+.pdf-mode .big-notes {
+  height: 40px !important; /* Riduce l'altezza dei box di testo vuoti */
+}
+
+/* Ridimensiona i Canvas delle firme e dello schema nel PDF */
+.pdf-mode .temp-pdf-img {
+  max-height: 45px !important; /* Le firme non devono essere giganti */
+  object-fit: contain !important;
+  display: block !important;
+  margin: auto !important;
+}
+
 .pdf-mode .schema-container .temp-pdf-img {
-  max-height: 100px !important;
+  max-height: 95px !important; /* Lo schema di installazione */
 }
 
 .pdf-mode .big-notes {
