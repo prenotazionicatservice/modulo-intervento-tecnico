@@ -1,4 +1,4 @@
-const CACHE_NAME = 'interventi-v28';
+const CACHE_NAME = 'interventi-v29'; // Incrementato la versione per forzare l'aggiornamento
 
 const ASSETS = [
   'index.html',
@@ -6,7 +6,8 @@ const ASSETS = [
   'logo.PNG',
   'Icon-192.png',
   'Icon-512.png',
-  'icon-180.png'
+  'icon-180.png',
+  'html2pdf.bundle.min.js' // Inserita la libreria locale correttamente
 ];
 
 self.addEventListener('install', (e) => {
