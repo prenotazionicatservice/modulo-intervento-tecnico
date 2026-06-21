@@ -489,35 +489,113 @@ canvas {
     z-index: 1;
 }
 
-/* TABLET E TELEFONI */
+/* ==========================================================================
+   GESTIONE SPECIFICA PER GENERAZIONE PDF (Attivata da JS tramite .pdf-mode)
+   ========================================================================== */
+
+.pdf-mode {
+  width: 210mm !important;
+  max-width: 210mm !important;
+  min-height: 297mm !important;
+  height: 297mm !important;
+  padding: 10mm !important;
+  box-sizing: border-box !important;
+  background: #ffffff !important;
+}
+
+/* Forza le colonne a rimanere affiancate nel PDF anche se generato da Mobile */
+.pdf-mode .columns {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px !important;
+}
+
+.pdf-mode .left-column,
+.pdf-mode .right-column {
+  flex: 1 !important;
+  width: 50% !important;
+}
+
+/* Ottimizzazione input e scritte per la stampa ad alta definizione */
+.pdf-mode input[type="text"],
+.pdf-mode input[type="time"] {
+  background: transparent !important;
+  border-bottom: 1px dotted #000 !important;
+  -webkit-appearance: none;
+}
+
+.pdf-mode textarea {
+  background: transparent !important;
+  border: 1px solid #aaa !important;
+  border-bottom: 1px dotted #000 !important;
+}
+
+/* Forza la visibilità della filigrana dello sfondo durante la cattura */
+.pdf-mode::before {
+  opacity: 0.12 !important; /* Leggermente più opaco per stampe chiare */
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+/* Uniforma le altezze dei contenitori delle immagini temporanee dei canvas */
+.temp-pdf-img {
+  border: 1px solid #ccc !important;
+  background: #fafafa !important;
+}
+
+
+/* ==========================================================================
+   VERSIONE STAMPA STANDARD (Browser Ctrl+P) E RESPONSIVE MOBILE
+   ========================================================================== */
+
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+  .toolbar {
+    display: none;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0;
+    padding: 8mm;
+    border: none;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* TABLET E TELEFONI (Solo su Schermo, NON intacca il PDF) */
 @media screen and (max-width: 900px) {
   body {
     padding: 5px;
   }
 
-  .page {
+  /* Applica il responsive in colonna singola SOLO se NON siamo in modalità PDF */
+  :not(.pdf-mode).page {
     width: 100%;
     height: auto;
     min-height: auto;
     padding: 10px;
   }
 
-  .columns {
+  :not(.pdf-mode) .columns {
     flex-direction: column;
-    gap: 0;
+    gap: 10px;
   }
 
-  .left-column,
-  .right-column {
+  :not(.pdf-mode) .left-column,
+  :not(.pdf-mode) .right-column {
     width: 100%;
   }
-}
 
-  .check-table td {
+  :not(.pdf-mode) .check-table td {
     font-size: 10px;
   }
 
-  .privacy-box p {
+  :not(.pdf-mode) .privacy-box p {
     font-size: 8px;
   }
 }
