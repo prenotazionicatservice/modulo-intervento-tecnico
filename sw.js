@@ -1,4 +1,4 @@
-const CACHE_NAME = 'interventi-v47';
+const CACHE_NAME = 'interventi-v48';
 
 const ASSETS = [
   'index.html',
@@ -7,7 +7,7 @@ const ASSETS = [
   'Icon-192.png',
   'Icon-512.png',
   'icon-180.png',
-  'html2pdf.bundle.min.js' // ORA LA VIRGOLA È CORRETTA
+  'html2pdf.bundle.min.js', // ORA LA VIRGOLA È CORRETTA
 ];
 
 self.addEventListener('install', (e) => {
